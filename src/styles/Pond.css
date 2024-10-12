@@ -1,0 +1,143 @@
+.pond-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-image: url('../assets/background.jpg'); /* Update this path as necessary */
+  background-size: cover; /* Make the image cover the entire background */
+  background-position: center; /* Center the image */
+  background-color: rgba(255, 255, 255, 0.8); /* Add a white background with some transparency */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pond-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.add-pond-form, .add-koi-form, .edit-koi-form {
+  margin-bottom: 20px;
+}
+
+.add-pond-form input, .add-koi-form input, .add-koi-form select, .edit-koi-form input, .edit-koi-form select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-pond-form button, .add-koi-form button, .edit-koi-form button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: chocolate;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-pond-form button:hover, .add-koi-form button:hover, .edit-koi-form button:hover {
+  background-color: #d2691e;
+}
+
+.pond-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.pond {
+  flex: 1 1 calc(50% - 20px);
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pond img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.koi-management {
+  margin-top: 20px;
+}
+
+.koi-management h4 {
+  margin-bottom: 10px;
+}
+
+.koi-management ul {
+  list-style: none;
+  padding: 0;
+}
+
+.koi-management li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+}
+
+.koi-management li p {
+  margin: 5px 0;
+}
+
+.koi-management li img {
+  max-width: 100px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.koi-management li button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: chocolate;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.koi-management li button:hover {
+  background-color: #d2691e;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+}
+
+.modal-content img {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}

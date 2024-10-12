@@ -1,0 +1,25 @@
+/* BlogDetails.css */
+
+.blog-details {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .blog-details h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+  
+  .blog-details p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .blog-author {
+    margin-top: 20px;
+    font-weight: bold;
+  }

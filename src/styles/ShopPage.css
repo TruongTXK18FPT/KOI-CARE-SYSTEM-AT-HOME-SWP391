@@ -1,0 +1,128 @@
+/* ShopPage.css */
+
+.shop-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-image: url('../assets/background.jpg');
+  background-position: center;
+  background-size: cover;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.shop-title {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.cart-icon {
+  position: relative;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.cart-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8em;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  padding: 8px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.product-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  color: #28a745;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}
+
+.product-description {
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.view-details-button, .add-to-cart-button {
+  padding: 8px 12px;
+  background-color: chocolate;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.view-details-button:hover, .add-to-cart-button:hover {
+  background-color: chocolate;
+}
+
+.cart-container {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.cart-container h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.cart-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cart-container li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+
+  

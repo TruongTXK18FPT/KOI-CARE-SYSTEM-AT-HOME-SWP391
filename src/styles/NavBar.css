@@ -1,0 +1,52 @@
+/* NavBar.css */
+
+.navbar {
+    background-color: chocolate;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 1.1rem;
+  }
+  
+  .navbar a:hover {
+    background-color: black;
+    border-radius: 4px;
+  }
+  
+  .navbar-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-logo {
+    width: 40px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 10px; /* Adjust spacing as needed */
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    margin-right: 20px; /* Adjust spacing as needed */
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .nav-icon {
+    width: 20px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 5px; /* Adjust spacing as needed */
+  }  
+  
