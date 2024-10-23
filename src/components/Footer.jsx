@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import MapModal from './MapModal'; // Import the MapModal component
 import '../styles/Footer.css';
 
 const Footer = () => {
+  const [isMapOpen, setIsMapOpen] = useState(false);
+
+  const handleMapOpen = () => {
+    setIsMapOpen(true);
+  };
+
+  const handleMapClose = () => {
+    setIsMapOpen(false);
+  };
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -15,12 +26,7 @@ const Footer = () => {
           <ul>
             <li><Link to="/home">Home</Link></li>
             <li><Link to="/shop">Shop</Link></li>
-            <li><Link to="/calculator">Calculator</Link></li>
-            <li><Link to="/profile">User Profile</Link></li>
-            <li><Link to="/pond">Pond</Link></li>
-            <li><Link to="/admin">Admin</Link></li>
-            <li><Link to="/manager">Manager</Link></li>
-            <li><Link to = "/water-parameter">Water Parameter</Link></li>
+            <li><Link to ="/blog">Blog</Link></li>
           </ul>
         </div>
         <div className="footer-section">
@@ -28,24 +34,14 @@ const Footer = () => {
           <ul>
             <li><Link to="/contact">Contact Form</Link></li>
             <li>Email: tranxuantin1234@gmail.com</li>
-            <li>Phone: 0931430662</li>
-          </ul>
-        </div>
-        <div className="footer-section">
-          <h4>Legal</h4>
-          <ul>
-            <li><Link to="/terms-of-service">Terms of Service</Link></li>
-            <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+            <li><span className="address-link" onClick={handleMapOpen}>Koi Care System Company</span></li>
           </ul>
         </div>
       </div>
-      <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} Koi Care System. All rights reserved.</p>
-      </div>
+      <MapModal isOpen={isMapOpen} onClose={handleMapClose} />
     </footer>
   );
 };
 
 export default Footer;
-
 

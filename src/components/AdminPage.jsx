@@ -4,35 +4,116 @@ import '../styles/AdminPage.css'; // Ensure this path is correct
 
 const AdminPage = () => {
   const [members, setMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [newMember, setNewMember] = useState({ email: '', fullName: '', role: '' });
+  const [selectedRole, setSelectedRole] = useState('');
+  const [showAddMemberForm, setShowAddMemberForm] = useState(false);
+  const [showEditMemberForm, setShowEditMemberForm] = useState(false);
+  const [newMember, setNewMember] = useState({
+    email: '',
+    password: '',
+    accountImg: '',
+    role: 'member',
+    fullName: '',
+    gender: 'male',
+    birthDay: '', // Add birthDay field
+    phone: '',
+    address: '',
+    status: 'active'
+  });
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     // Fetch the list of members from the server
-    axios.get('/api/members')
-      .then(response => setMembers(response.data))
+    const token = localStorage.getItem('token'); // Get the token from localStorage
+    axios.get('http://localhost:8080/api/admin/users', {
+      headers: {
+        Authorization: `Bearer ${token}` // Include the token in the headers
+      }
+    })
+      .then(response => {
+        setMembers(response.data.data);
+        setFilteredMembers(response.data.data); // Initialize filtered members
+      })
       .catch(error => console.error('Error fetching members:', error));
   }, []);
 
   const handleSearch = () => {
     // Implement search functionality here
-    axios.get(`/api/members?search=${searchTerm}`)
-      .then(response => setMembers(response.data))
-      .catch(error => console.error('Error searching members:', error));
+    const filteredMembers = members.filter(member => 
+      member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.role.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredMembers(filteredMembers);
+  };
+
+  const handleRoleSearch = (role) => {
+    // Implement role search functionality here
+    if (role === '') {
+      setFilteredMembers(members); // Show all members if no role is selected
+    } else {
+      const filteredMembers = members.filter(member => member.role.toLowerCase() === role.toLowerCase());
+      setFilteredMembers(filteredMembers);
+    }
   };
 
   const handleAddMember = () => {
     // Implement add member functionality here
-    axios.post('/api/members', newMember)
-      .then(response => setMembers([...members, response.data]))
-      .catch(error => console.error('Error adding member:', error));
+    const token = localStorage.getItem('token'); // Get the token from localStorage
+    axios.post('http://localhost:8080/api/admin/users/add', newMember, {
+      headers: {
+        Authorization: `Bearer ${token}` // Include the token in the headers
+      }
+    })
+      .then(response => {
+        setMembers([...members, response.data.data]);
+        setFilteredMembers([...members, response.data.data]); // Update filtered members as well
+        setShowAddMemberForm(false); // Hide the form after adding a member
+        setError(''); // Clear any previous errors
+      })
+      .catch(error => {
+        console.error('Error adding member:', error);
+        setError('Failed to add member. Please check the input fields.');
+      });
   };
 
-  const handleDeactivate = (id) => {
-    // Implement deactivate member functionality here
-    axios.patch(`/api/members/${id}/deactivate`)
-      .then(() => setMembers(members.map(member => member.id === id ? { ...member, active: false } : member)))
-      .catch(error => console.error('Error deactivating member:', error));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewMember({ ...newMember, [name]: value });
+  };
+
+  const handleEditMember = (member) => {
+    // Format the birthDay to "yyyy-MM-dd"
+    if (member.birthDay) {
+      member.birthDay = new Date(member.birthDay).toISOString().split('T')[0];
+    }
+    setSelectedMember(member);
+    setShowEditMemberForm(true);
+  };
+
+  const handleUpdateMember = () => {
+    console.log('Updating member with ID:', selectedMember?.accountId); // Debugging statement
+    if (!selectedMember || !selectedMember.accountId) {
+      console.error('Invalid member ID for update');
+      return;
+    }
+    const token = localStorage.getItem('token'); // Get the token from localStorage
+    axios.put(`http://localhost:8080/api/admin/users/update/${selectedMember.accountId}`, selectedMember, {
+      headers: {
+        Authorization: `Bearer ${token}` // Include the token in the headers
+      }
+    })
+      .then(response => {
+        setMembers(members.map(member => member.accountId === selectedMember.accountId ? response.data.data : member));
+        setFilteredMembers(filteredMembers.map(member => member.accountId === selectedMember.accountId ? response.data.data : member));
+        setShowEditMemberForm(false); // Hide the form after updating a member
+        setError(''); // Clear any previous errors
+      })
+      .catch(error => {
+        console.error('Error updating member:', error);
+        setError('Failed to update member. Please check the input fields.');
+      });
   };
 
   return (
@@ -44,58 +125,211 @@ const AdminPage = () => {
           placeholder="Search members"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
         />
         <button className="btn btn-search" onClick={handleSearch}>Search</button>
-        <button className="btn btn-add" onClick={() => setNewMember({ email: '', fullName: '', role: '' })}>Add Member</button>
+        <select
+          className="role-select"
+          value={selectedRole}
+          onChange={(e) => {
+            setSelectedRole(e.target.value);
+            handleRoleSearch(e.target.value);
+          }}
+        >
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="member">Member</option>
+          <option value="manager">Manager</option>
+        </select>
+        <button className="btn btn-add" onClick={() => setShowAddMemberForm(true)}>Add Member</button>
       </div>
       <div className="member-list">
-        <table>
+        <table className="member-table">
           <thead>
             <tr>
               <th>Email</th>
               <th>Full Name</th>
               <th>Role</th>
+              <th>Gender</th>
+              <th>Birth Date</th>
+              <th>Phone</th>
+              <th>Address</th>
               <th>Status</th>
+              <th>Account Image</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {members.map(member => (
-              <tr key={member.id}>
+            {filteredMembers.map(member => (
+              <tr key={member.accountId}>
                 <td>{member.email}</td>
                 <td>{member.fullName}</td>
                 <td>{member.role}</td>
-                <td>{member.active ? 'Active' : 'Inactive'}</td>
+                <td>{member.gender}</td>
+                <td>{member.birthDay}</td>
+                <td>{member.phone}</td>
+                <td>{member.address}</td>
+                <td>{member.status}</td>
+                <td><img src={member.accountImg} alt="Account" className="account-img" /></td>
                 <td>
-                  <button className="btn btn-deactivate" onClick={() => handleDeactivate(member.id)}>Deactivate</button>
+                  <button className="btn btn-edit" onClick={() => handleEditMember(member)}>Edit</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {newMember && (
+      {showAddMemberForm && (
         <div className="add-member-form">
           <h3>Add New Member</h3>
+          {error && <p className="error-message">{error}</p>}
           <input
             type="email"
+            name="email"
             placeholder="Email"
             value={newMember.email}
-            onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={newMember.password}
+            onChange={handleInputChange}
+            className="form-input"
           />
           <input
             type="text"
+            name="accountImg"
+            placeholder="Account Image URL"
+            value={newMember.accountImg}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+          <select name="role" value={newMember.role} onChange={handleInputChange} className="form-input role-select">
+            <option value="admin">Admin</option>
+            <option value="member">Member</option>
+            <option value="manager">Manager</option>
+          </select>
+          <input
+            type="text"
+            name="fullName"
             placeholder="Full Name"
             value={newMember.fullName}
-            onChange={(e) => setNewMember({ ...newMember, fullName: e.target.value })}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+          <select name="gender" value={newMember.gender} onChange={handleInputChange} className="form-input">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+          <input
+            type="date"
+            name="birthDay"
+            placeholder="Birth Day"
+            value={newMember.birthDay}
+            onChange={handleInputChange}
+            className="form-input"
           />
           <input
             type="text"
-            placeholder="Role"
-            value={newMember.role}
-            onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+            name="phone"
+            placeholder="Phone"
+            value={newMember.phone}
+            onChange={handleInputChange}
+            className="form-input"
           />
-          <button className="btn btn-save" onClick={handleAddMember}>Add Member</button>
+          <input
+            type="text"
+            name="address"
+            placeholder="Address"
+            value={newMember.address}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+          <select name="status" value={newMember.status} onChange={handleInputChange} className="form-input">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <div className="form-buttons">
+            <button className="btn btn-save" onClick={handleAddMember}>Add Member</button>
+            <button className="btn btn-cancel" onClick={() => setShowAddMemberForm(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+      {showEditMemberForm && selectedMember && (
+        <div className="edit-member-form">
+          <h3>Edit Member</h3>
+          {error && <p className="error-message">{error}</p>}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={selectedMember.email}
+            onChange={(e) => setSelectedMember({ ...selectedMember, email: e.target.value })}
+            className="form-input"
+            disabled
+          />
+          <input
+            type="text"
+            name="accountImg"
+            placeholder="Account Image URL"
+            value={selectedMember.accountImg}
+            onChange={(e) => setSelectedMember({ ...selectedMember, accountImg: e.target.value })}
+            className="form-input"
+          />
+          <select name="role" value={selectedMember.role} onChange={(e) => setSelectedMember({ ...selectedMember, role: e.target.value })} className="form-input role-select">
+            <option value="admin">Admin</option>
+            <option value="member">Member</option>
+            <option value="manager">Manager</option>
+          </select>
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Full Name"
+            value={selectedMember.fullName}
+            onChange={(e) => setSelectedMember({ ...selectedMember, fullName: e.target.value })}
+            className="form-input"
+          />
+          <select name="gender" value={selectedMember.gender} onChange={(e) => setSelectedMember({ ...selectedMember, gender: e.target.value })} className="form-input">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+          <input
+            type="date"
+            name="birthDay"
+            placeholder="Birth Day"
+            value={selectedMember.birthDay || ''}
+            onChange={(e) => setSelectedMember({ ...selectedMember, birthDay: e.target.value })}
+            className="form-input"
+          />
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone"
+            value={selectedMember.phone}
+            onChange={(e) => setSelectedMember({ ...selectedMember, phone: e.target.value })}
+            className="form-input"
+          />
+          <input
+            type="text"
+            name="address"
+            placeholder="Address"
+            value={selectedMember.address}
+            onChange={(e) => setSelectedMember({ ...selectedMember, address: e.target.value })}
+            className="form-input"
+          />
+          <select name="status" value={selectedMember.status} onChange={(e) => setSelectedMember({ ...selectedMember, status: e.target.value })} className="form-input">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <div className="form-buttons">
+            <button className="btn btn-save" onClick={handleUpdateMember}>Update Member</button>
+            <button className="btn btn-cancel" onClick={() => setShowEditMemberForm(false)}>Cancel</button>
+          </div>
         </div>
       )}
     </div>

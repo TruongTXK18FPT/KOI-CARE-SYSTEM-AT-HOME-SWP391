@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEnvelope, FaUser, FaBirthdayCake, FaPhone, FaVenusMars, FaUserTag, FaImage } from 'react-icons/fa';
+import axios from 'axios';
 import '../styles/UserProfile.css'; // Ensure this path is correct
 
 const UserProfile = () => {
@@ -10,29 +11,80 @@ const UserProfile = () => {
     phone: '',
     gender: '',
     role: '',
-    profilePicture: '',
+    profilePicture: '', // Updated to match the backend field name
   });
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        console.log('Auth Token:', token); // Debugging statement
+        if (token) {
+          const response = await axios.get('http://localhost:8080/api/auth/profile', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          console.log('Fetched profile:', response.data); // Debugging statement
+          const userProfile = response.data;
+
+          // Format the birthday to "yyyy-MM-dd"
+          if (userProfile.birthday) {
+            userProfile.birthday = new Date(userProfile.birthday).toISOString().split('T')[0];
+          }
+
+          // Update the state with the fetched profile data
+          setProfile({
+            email: userProfile.email,
+            fullName: userProfile.fullName,
+            birthday: userProfile.birthday,
+            phone: userProfile.phone,
+            gender: userProfile.gender,
+            role: userProfile.role,
+            profilePicture: userProfile.accountImg, // Ensure this matches the backend field name
+          });
+        } else {
+          console.error('No auth token found');
+        }
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfile({ ...profile, profilePicture: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(profile);
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Auth Token on Submit:', token); // Debugging statement
+      if (token) {
+        await axios.put('http://localhost:8080/api/auth/update', {
+          email: profile.email,
+          fullName: profile.fullName,
+          birthDay: profile.birthday,
+          phone: profile.phone,
+          gender: profile.gender,
+          role: profile.role,
+          accountImg: profile.profilePicture,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        alert('Profile updated successfully');
+      } else {
+        console.error('No auth token found');
+      }
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+    }
   };
 
   return (
@@ -52,6 +104,7 @@ const UserProfile = () => {
             name="email"
             value={profile.email}
             onChange={handleInputChange}
+            disabled
           />
         </div>
         <div className="form-group">
@@ -74,7 +127,7 @@ const UserProfile = () => {
             type="date"
             id="birthday"
             name="birthday"
-            value={profile.birthday}
+            value={profile.birthday || ''}
             onChange={handleInputChange}
           />
         </div>
@@ -120,14 +173,14 @@ const UserProfile = () => {
         </div>
         <div className="form-group">
           <label htmlFor="profilePicture">
-            <FaImage /> Profile Picture:
+            <FaImage /> Profile Picture URL:
           </label>
           <input
-            type="file"
+            type="text"
             id="profilePicture"
             name="profilePicture"
-            accept="image/*"
-            onChange={handleImageChange}
+            value={profile.profilePicture}
+            onChange={handleInputChange}
           />
         </div>
         <button type="submit" className="save-btn">Save</button>

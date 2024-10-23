@@ -6,12 +6,12 @@
 }
 
 .blog-post {
-  background-color: chocolate;
+  background-color: lightgoldenrodyellow;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: white; /* Adjust text color for better readability */
+  color: black; /* Adjust text color for better readability */
 }
 
 .blog-image {
@@ -34,7 +34,7 @@
 }
 
 .created-date {
-  color: #ccc;
+  color: black;
   font-size: 14px;
   margin-top: 10px;
 }

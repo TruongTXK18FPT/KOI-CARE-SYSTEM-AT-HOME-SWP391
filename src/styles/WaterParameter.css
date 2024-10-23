@@ -6,7 +6,7 @@ body {
     color: #3e2723; /* Dark chocolate color for text */
   }
   
-  .container {
+  .water-parameter-container {
     background-color: rgba(255, 248, 220, 0.9); /* Light chocolate tone with transparency */
     padding: 20px;
     border-radius: 10px;
@@ -34,7 +34,7 @@ body {
     background-color: #fff8dc; /* Light chocolate tone for input background */
   }
   
-  button {
+   .water-parameter-button {
     background-color: #8d6e63; /* Medium chocolate color for button */
     color: white;
     padding: 10px 20px;

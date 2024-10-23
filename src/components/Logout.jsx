@@ -1,37 +1,62 @@
-/*import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '../context/AuthContext'; // Adjust the path as necessary
 
-const Logout = () => {
-  const navigate = useNavigate();
+// const Logout = () => {
+//   const navigate = useNavigate();
+//   const { logout } = useAuth();
 
-  useEffect(() => {
-    // Perform logout logic here, e.g., clearing authentication tokens
-    localStorage.removeItem('authToken'); // Example: remove auth token from local storage
+//   useEffect(() => {
+//     const performLogout = () => {
+//       // Clear localStorage
+//       localStorage.removeItem('authToken');
+//       localStorage.removeItem('userRole');
+//       localStorage.removeItem('userFullName');
+      
+//       // Update the authentication state
+//       logout();
 
-    // Redirect to homepage
-    navigate('/');
-  }, [navigate]);
+//       // Redirect to login page
+//       navigate('/');
 
-  return (
-    <div>
-      <p>Logging out...</p>
-    </div>
-  );
-};
+//       // Refresh the page
+//       window.location.reload();
+//     };
 
-export default Logout;*/
+//     performLogout();
+//   }, [logout, navigate]);
+
+//   return null; // Optionally, show a loading spinner or message
+// };
+
+// export default Logout;
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Adjust the path as necessary
 
 const Logout = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
-    // Clear localStorage and redirect to login
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userFullName');
-    navigate('/login');
-  }, [navigate]);
+    const performLogout = () => {
+      // Clear localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userFullName');
+      
+      // Update the authentication state
+      logout();
+
+      // Redirect to login page
+      navigate('/');
+
+      // Refresh the page
+      window.location.reload();
+    };
+
+    performLogout();
+  }, [logout, navigate]);
 
   return null; // Optionally, show a loading spinner or message
 };
