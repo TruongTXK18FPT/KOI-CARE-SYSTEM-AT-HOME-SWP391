@@ -1,0 +1,202 @@
+.pond-details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, salmon, #2193b0);
+  padding: 20px;
+}
+
+.pond-details-container h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 20px;
+  animation: slideIn 1s;
+}
+
+.add-pond-btn {
+  background: #2193b0;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s, transform 0.3s;
+  margin-bottom: 20px;
+}
+
+.add-pond-btn:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+.pond-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.pond {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  animation: fadeIn 1s;
+}
+
+.pond h3 {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.pond p {
+  font-size: 1rem;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.pond-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.update-btn, .delete-btn {
+  background: #2193b0;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 10px;
+}
+
+.update-btn:hover, .delete-btn:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+.water-parameters {
+  margin-top: 20px;
+}
+
+.water-parameter {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-button {
+  background: #2193b0;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s, transform 0.3s;
+  margin: 0 5px;
+}
+
+.page-button:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+.page-button.active {
+  background: #6dd5ed;
+}
+
+.edit-pond-form {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+  animation: fadeIn 1s;
+}
+
+.edit-pond-form h3 {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.edit-pond-form label {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.edit-pond-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-top: 5px;
+}
+
+.edit-pond-form input:focus {
+  border: 2px solid #6dd5ed;
+}
+
+.save-btn {
+  background: #2193b0;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 20px;
+}
+
+.save-btn:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

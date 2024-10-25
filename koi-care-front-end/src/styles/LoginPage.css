@@ -1,0 +1,111 @@
+.login-page {
+  display: flex;
+  height: 100vh;
+  background-color: #e0f7fa; /* Light cyan background */
+}
+
+.login-welcome-message {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(to right, #2193b0, salmon); /* Light blue background */
+  color: black; /* Black text */
+  text-align: center;
+}
+
+.welcome-message h2 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.welcome-message p {
+  font-size: 1.2em;
+}
+
+.login-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: salmon; /* Gradient background for login form */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.login-container h2 {
+  color:  black; /* Blue for login title */
+  margin-bottom: 20px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.login-icon {
+  position: absolute;
+  left: 10px;
+  top: 12px;
+  color: black; /* Black for icons */
+}
+
+.login-input-group input {
+  width: 100%;
+  padding: 15px 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+}
+
+.error {
+  color: #e53935; /* Red for error messages */
+  margin-bottom: 15px;
+}
+
+.login-btn {
+  background-color: black; /* Blue button */
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.login-btn:hover {
+  background-color: #004d40; /* Darker blue on hover */
+}
+
+.login-links {
+  margin-top: 15px;
+}
+
+.login-links a {
+  color:  black; /* Blue for links */
+  text-decoration: none;
+}
+
+.login-links a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+.response {
+  margin-top: 20px;
+  color: #00796b; /* Dark teal for response */
+}
+
+
+
+  

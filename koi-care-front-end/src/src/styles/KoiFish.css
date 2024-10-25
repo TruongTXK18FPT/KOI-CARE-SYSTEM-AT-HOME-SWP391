@@ -1,0 +1,123 @@
+body {
+    background-image: url('../assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+    color: #3e2723; /* Dark chocolate color for text */
+  }
+  
+  .koifish-container {
+    background-color: rgba(255, 248, 220, 0.9); /* Light chocolate tone with transparency */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 50px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .koifish-container h2 {
+    text-align: center;
+    color: #5d4037; /* Medium chocolate color for headings */
+  }
+  
+  .add-koi-form, .edit-koi-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .add-koi-form label, .edit-koi-form label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #3e2723; /* Dark chocolate color for labels */
+  }
+  
+  .add-koi-form .icon, .edit-koi-form .icon {
+    color: #8d6e63;
+    font-size: 1.2em;
+  }
+  
+  .add-koi-form input, .edit-koi-form input, .edit-koi-form select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #5d4037; /* Medium chocolate color for borders */
+    border-radius: 5px;
+    background-color: #fff8dc; /* Light chocolate tone for input background */
+    font-size: 1em;
+  }
+  
+  .add-koi-form button, .edit-koi-form button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8d6e63; /* Medium chocolate color for button */
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-koi-form button:hover, .edit-koi-form button:hover {
+    background-color: #6d4c41; /* Darker chocolate color for button hover */
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .modal-content .close:hover {
+    color: #000;
+  }
+  
+  .koi-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .koi-details p {
+    margin: 5px 0;
+    color: #3e2723; /* Dark chocolate color for text */
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }

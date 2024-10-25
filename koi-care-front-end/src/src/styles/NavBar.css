@@ -1,0 +1,91 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: lightgoldenrodyellow; /* Light chocolate tone */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-title {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #3e2723; /* Dark chocolate color for text */
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.navbar-logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #007bff; /* Blue color for hover */
+}
+
+.nav-links .home-link {
+  color: #ff5722; /* Orange */
+}
+
+.nav-links .login-link {
+  color: #4caf50; /* Green */
+}
+
+.nav-links .shop-link {
+  color: #9c27b0; /* Purple */
+}
+
+.nav-links .features-link {
+  color: #ff9800; /* Amber */
+}
+
+.nav-links .blog-link {
+  color: #03a9f4; /* Light Blue */
+}
+
+.nav-links .profile-link {
+  color: #e91e63; /* Pink */
+}
+
+.nav-links .pond-link {
+  color: #673ab7; /* Deep Purple */
+}
+
+.nav-links .koi-link {
+  color: #3f51b5; /* Indigo */
+}
+
+.nav-links .calculator-link {
+  color: #009688; /* Teal */
+}
+
+.nav-links .water-link {
+  color: #00bcd4; /* Cyan */
+}
+
+.nav-links .logout-link {
+  color: #f44336; /* Red */
+}
+
+.nav-links .icon {
+  font-size: 1.2em;
+}
+  

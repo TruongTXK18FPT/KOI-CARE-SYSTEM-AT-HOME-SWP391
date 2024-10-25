@@ -1,0 +1,202 @@
+.water-parameter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, salmon, #2193b0);
+  padding: 20px;
+}
+
+.water-parameter-container h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 20px;
+  animation: slideIn 1s;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.label-content {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+label input,
+label select,
+label textarea {
+  width: calc(100% - 30px); /* Adjust width to account for icon */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 5px;
+  transition: border-color 0.3s ease;
+}
+
+label input:focus,
+label select:focus,
+label textarea:focus {
+  border-color: #2193b0;
+}
+
+button {
+  background: #2193b0;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 20px;
+}
+
+button:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+.details {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  animation: fadeIn 1s;
+}
+
+.details p {
+  color: white;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.info-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #2193b0;
+}
+
+.modal {
+  background: linear-gradient(to right, salmon, #2193b0); /* Gradient background for modal */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: white; /* White text color for contrast */
+  font-family: 'Arial', sans-serif; /* Font family for better readability */
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal h2 {
+  color: white; /* White color for headings */
+  margin-bottom: 15px;
+}
+
+.modal p {
+  color: white; /* White color for paragraph text */
+  margin-bottom: 15px;
+  line-height: 1.6; /* Improved line height for readability */
+}
+
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus {
+  border-color: #2193b0;
+}
+
+.modal button {
+  background: black;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 20px;
+}
+
+.modal button:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  label {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  input,
+  select {
+    margin-left: 0;
+    width: 100%;
+  }
+}

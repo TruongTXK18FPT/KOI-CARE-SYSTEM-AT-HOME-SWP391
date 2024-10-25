@@ -1,0 +1,64 @@
+body {
+  background-image: url('../assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+  color: #3e2723; /* Dark chocolate color for text */
+}
+
+.pond-container {
+  background-color: rgba(255, 248, 220, 0.9); /* Light chocolate tone with transparency */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 50px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pond-container h2 {
+  text-align: center;
+  color: #5d4037; /* Medium chocolate color for headings */
+}
+
+.add-pond-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-pond-form label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #3e2723; /* Dark chocolate color for labels */
+}
+
+.add-pond-form .icon {
+  color: #8d6e63;
+  font-size: 1.2em;
+}
+
+.add-pond-form input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #5d4037; /* Medium chocolate color for borders */
+  border-radius: 5px;
+  background-color: #fff8dc; /* Light chocolate tone for input background */
+  font-size: 1em;
+}
+
+.add-pond-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8d6e63; /* Medium chocolate color for button */
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-pond-form button:hover {
+  background-color: #6d4c41; /* Darker chocolate color for button hover */
+}
+

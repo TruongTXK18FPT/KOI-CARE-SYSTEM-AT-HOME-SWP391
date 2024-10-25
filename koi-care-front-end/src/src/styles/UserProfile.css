@@ -1,0 +1,106 @@
+.user-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, salmon, #2193b0);
+  padding: 20px;
+}
+
+.user-profile-container h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 20px;
+  animation: slideIn 1s;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-profile-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px; /* Increased max-width for better balance */
+  background: rgba(255, 255, 255, 0.1);
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s;
+}
+
+.user-profile-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px; /* Giảm margin để cân bằng giữa các trường */
+}
+
+.user-profile-form-group label {
+  color: white;
+  font-size: 1.2rem; /* Tăng kích thước font cho nhãn để nổi bật hơn */
+  margin-bottom: 10px; /* Tăng khoảng cách giữa nhãn và trường đầu vào */
+  display: flex;
+  align-items: flex-start; /* Đảm bảo nhãn thẳng hàng với đầu vào */
+  font-weight: bold; /* Tạo độ nổi bật cho nhãn */
+}
+
+.user-profile-form-group input,
+.user-profile-form-group select {
+  width: 100%;
+  padding: 12px; /* Điều chỉnh padding cho trường đầu vào */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.1em; /* Tăng kích thước font của trường đầu vào */
+}
+
+.user-profile-form-group input:focus,
+.user-profile-form-group select:focus {
+  border: 2px solid #6dd5ed;
+}
+
+
+.save-btn {
+  background: #2193b0;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s, transform 0.3s;
+  margin-top: 20px;
+}
+
+.save-btn:hover {
+  background: #6dd5ed;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
