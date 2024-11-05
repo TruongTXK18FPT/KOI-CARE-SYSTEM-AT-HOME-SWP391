@@ -1,123 +1,253 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSearch, FaFilter, FaSort, FaShoppingCart } from 'react-icons/fa';
-import ProductDetails from './ProductDetails'; // Import the ProductDetails component
-import Cart from './Cart'; // Import the Cart component
+import { Link } from 'react-router-dom';
+import ProductDetails from './ProductDetails';
+import Cart from './Cart';
 import '../styles/ShopPage.css';
 
 const ShopPage = () => {
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [sortBy, setSortBy] = useState('');
-  const [category, setCategory] = useState('');
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const [state, setState] = useState({
+    products: [],
+    cart: [],
+    cartTotal: 0,
+    totalPages: 0,
+    error: '',
+    loading: false
+  });
+  
+  const [filters, setFilters] = useState({
+    searchKeyword: '',
+    sortBy: '',
+    category: '',
+    currentPage: 0
+  });
+  
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const token = localStorage.getItem('token');
+  const userFullName = localStorage.getItem('userFullName');
+  const accountId = localStorage.getItem('accountId');
 
   const categories = [
     'Aquarium Supplies',
     'Aquarium Decor',
     'Fish Food',
     'Aquarium Equipment',
-    'Fish Healthcare'
+    'Fish Healthcare',
   ];
 
-  const fetchAllProducts = useCallback(async () => {
+  const publicAxios = axios.create({
+    baseURL: 'http://localhost:8080'
+  });
+
+  const privateAxios = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const fetchProducts = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/product/getAll?page=${currentPage}&size=10`);
-      setProducts(response.data.content);
-      setTotalPages(response.data.totalPages);
+      let url = '/product/getAll?';
+      if (filters.category) {
+        url = `/product/filter?category=${filters.category}&`;
+      } else if (filters.sortBy) {
+        url = `/product/sort?sortBy=${filters.sortBy}&`;
+      }
+      url += `page=${filters.currentPage}&size=10`;
+
+      const response = await publicAxios.get(url);
+      setState(prev => ({
+        ...prev,
+        products: response.data.content,
+        totalPages: response.data.totalPages,
+        error: ''
+      }));
     } catch (error) {
       console.error('Error fetching products:', error);
+      setState(prev => ({ 
+        ...prev, 
+        error: 'Failed to fetch products',
+        products: []
+      }));
     }
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchAllProducts();
-  }, [fetchAllProducts, currentPage]);
-
-  const handleSearch = () => {
-    return products.filter(product =>
-      product.productName.toLowerCase().includes(searchKeyword.toLowerCase()) &&
-      (!category || product.category === category)
-    );
   };
 
-  const handleSort = useCallback(async () => {
-    if (!sortBy) return;
-    
+  const fetchCart = async () => {
+    if (!token || !accountId) return;
+
     try {
-      const response = await axios.get(`http://localhost:8080/product/sort?sortBy=${sortBy}&page=${currentPage}&size=10`);
-      setProducts(response.data.content);
-      setTotalPages(response.data.totalPages);
+      const response = await privateAxios.get(`/api/cart/getCart?accountId=${accountId}`);
+      setState(prev => ({
+        ...prev,
+        cart: response.data.cartItems,
+        cartTotal: response.data.cartTotal
+      }));
     } catch (error) {
-      console.error('Error sorting products:', error);
+      console.error('Error fetching cart:', error);
     }
-  }, [sortBy, currentPage]);
+  };
 
   useEffect(() => {
-    if (sortBy) {
-      handleSort();
-    }
-  }, [sortBy, handleSort]);
+    fetchProducts();
+  }, [filters.currentPage, filters.category, filters.sortBy]);
 
-  const handleFilter = useCallback(async () => {
-    if (!category) return;
-    
+  useEffect(() => {
+    if (token && accountId) {
+      fetchCart();
+    }
+  }, [token, accountId]);
+
+  const addToCart = async (product) => {
+    if (!token || !accountId) {
+      setState(prev => ({ ...prev, error: 'Please login to add items to cart' }));
+      return;
+    }
+
+    setState(prev => ({ ...prev, loading: true }));
     try {
-      const response = await axios.get(`http://localhost:8080/product/filter`, {
-        params: {
-          category,
-          page: currentPage,
-          size: 10,
-        },
+      const response = await privateAxios.post('/api/cart/add', {
+        productId: product.productID,
+        quantity: 1
+      }, {
+        params: { accountId }
       });
-      setProducts(response.data.content);
-      setTotalPages(response.data.totalPages);
+
+      setState(prev => ({
+        ...prev,
+        cart: response.data.cartItems,
+        cartTotal: response.data.cartTotal,
+        error: '',
+        loading: false
+      }));
     } catch (error) {
-      console.error('Error filtering products:', error);
+      console.error('Error adding to cart:', error);
+      setState(prev => ({
+        ...prev,
+        error: error.response?.data?.error || 'Failed to add item to cart',
+        loading: false
+      }));
     }
-  }, [category, currentPage]);
+  };
 
-  useEffect(() => {
-    if (category) {
-      handleFilter();
+  const removeFromCart = async (productId) => {
+    if (!token || !accountId) {
+      setState(prev => ({ ...prev, error: 'Please login to remove items from cart' }));
+      return;
     }
-  }, [category, handleFilter]);
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
+    setState(prev => ({ ...prev, loading: true }));
+    try {
+      const response = await privateAxios.delete(`/api/cart/remove/${productId}`, {
+        params: { accountId }
+      });
+
+      setState(prev => ({
+        ...prev,
+        cart: response.data.cartItems,
+        cartTotal: response.data.cartTotal,
+        error: '',
+        loading: false
+      }));
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      setState(prev => ({
+        ...prev,
+        error: error.response?.data?.error || 'Failed to remove item from cart',
+        loading: false
+      }));
+    }
   };
 
-  const viewProductDetails = (product) => {
-    setSelectedProduct(product);
+  const clearCart = async () => {
+    if (!token || !accountId) {
+      setState(prev => ({ ...prev, error: 'Please login to clear the cart' }));
+      return;
+    }
+
+    setState(prev => ({ ...prev, loading: true }));
+    try {
+      await privateAxios.delete('/api/cart/clear', {
+        params: { accountId }
+      });
+      
+      setState(prev => ({
+        ...prev,
+        cart: [],
+        cartTotal: 0,
+        error: '',
+        loading: false
+      }));
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      setState(prev => ({
+        ...prev,
+        error: error.response?.data?.error || 'Failed to clear cart',
+        loading: false
+      }));
+    }
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleFiltersChange = (newFilters) => {
+    setFilters(prev => ({
+      ...prev,
+      ...newFilters,
+      currentPage: 0
+    }));
   };
 
-  const handleCartOpen = () => {
-    setIsCartOpen(true);
+  const handleCategoryClick = (selectedCategory) => {
+    handleFiltersChange({
+      category: selectedCategory === filters.category ? '' : selectedCategory
+    });
   };
 
-  const handleCartClose = () => {
-    setIsCartOpen(false);
+  const handleSortChange = (value) => {
+    handleFiltersChange({ sortBy: value });
   };
 
-  const filteredProducts = handleSearch();
+  const handleSearchChange = (value) => {
+    handleFiltersChange({ searchKeyword: value });
+  };
+
+  const filteredProducts = state.products.filter(
+    (product) =>
+      product.productName.toLowerCase().includes(filters.searchKeyword.toLowerCase())
+  );
+
+  const getProductQuantityInCart = (productId) => {
+    const cartItem = state.cart.find(item => item.productId === productId);
+    return cartItem ? cartItem.quantity : 0;
+  };
 
   return (
     <div className="shop-container">
       <div className="shop-header">
         <h1 className="shop-title">Shop</h1>
-        <div className="cart-icon" onClick={handleCartOpen}>
-          <FaShoppingCart />
-          <span className="cart-count">{cart.length}</span>
+        <div className="user-info">
+          {userFullName ? (
+            <span>Welcome, {userFullName}</span>
+          ) : (
+            <span>Please login to use cart features</span>
+          )}
         </div>
+        <div 
+          className="cart-icon" 
+          onClick={() => token ? setIsCartOpen(true) : setState(prev => ({ ...prev, error: 'Please login to view cart' }))}
+        >
+          <FaShoppingCart />
+          <span className="cart-count">
+            {state.cart.reduce((total, item) => total + item.quantity, 0)}
+          </span>
+        </div>
+        <Link to="/order-history" className="order-history-button">
+          View Order History
+        </Link>
       </div>
+
+      {state.error && <div className="error-message">{state.error}</div>}
+      {state.loading && <div className="loading">Processing...</div>}
 
       <div className="shop-controls">
         <div className="search-bar">
@@ -125,16 +255,16 @@ const ShopPage = () => {
           <input
             type="text"
             placeholder="Search products..."
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            value={filters.searchKeyword}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
 
         <div className="sort-bar">
           <FaSort className="icon" />
           <select 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
+            value={filters.sortBy} 
+            onChange={(e) => handleSortChange(e.target.value)}
           >
             <option value="">Sort By</option>
             <option value="price_asc">Price: Low to High</option>
@@ -150,8 +280,8 @@ const ShopPage = () => {
             {categories.map((cat) => (
               <div
                 key={cat}
-                className={`category-box ${category === cat ? 'selected' : ''}`}
-                onClick={() => setCategory(cat)}
+                className={`category-box ${filters.category === cat ? 'selected' : ''}`}
+                onClick={() => handleCategoryClick(cat)}
               >
                 {cat}
               </div>
@@ -166,37 +296,58 @@ const ShopPage = () => {
             <h2 className="product-name">{product.productName}</h2>
             <p className="product-price">{product.price} VND</p>
             <p className="product-description">{product.description}</p>
-            <img src={product.imageUrl} alt={product.productName} className="product-image" />
-            <button className="view-details-button" onClick={() => viewProductDetails(product)}>
+            <img
+              src={product.imageUrl}
+              alt={product.productName}
+              className="product-image"
+            />
+            <div className="quantity-info">
+              In Cart: {getProductQuantityInCart(product.productID)}
+            </div>
+            <button
+              className="view-details-button"
+              onClick={() => setSelectedProduct(product)}
+            >
               View Details
             </button>
-            <button className="add-to-cart-button" onClick={() => addToCart(product)}>
-              Add to Cart
+            <button
+              className="add-to-cart-button"
+              onClick={() => addToCart(product)}
+              disabled={state.loading || !token}
+            >
+              {!token ? 'Login to Add' : 'Add to Cart'}
             </button>
           </div>
         ))}
       </div>
 
       {selectedProduct && (
-        <ProductDetails 
-          product={selectedProduct} 
-          onClose={() => setSelectedProduct(null)} 
+        <ProductDetails
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={addToCart}
+          isLoggedIn={!!token}
+          quantityInCart={getProductQuantityInCart(selectedProduct.productID)}
         />
       )}
 
       {isCartOpen && (
-        <Cart 
-          cartItems={cart} 
-          onClose={handleCartClose} 
+        <Cart
+          cartItems={state.cart}
+          total={state.cartTotal}
+          onClose={() => setIsCartOpen(false)}
+          onRemoveItem={removeFromCart}
+          onClearCart={clearCart}
+          loading={state.loading}
         />
       )}
 
       <div className="pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
+        {Array.from({ length: state.totalPages }, (_, index) => (
           <button
             key={index}
-            className={`page-button ${index === currentPage ? 'active' : ''}`}
-            onClick={() => handlePageChange(index)}
+            className={`page-button ${index === filters.currentPage ? 'active' : ''}`}
+            onClick={() => handleFiltersChange({ currentPage: index })}
           >
             {index + 1}
           </button>
@@ -207,5 +358,3 @@ const ShopPage = () => {
 };
 
 export default ShopPage;
-
-

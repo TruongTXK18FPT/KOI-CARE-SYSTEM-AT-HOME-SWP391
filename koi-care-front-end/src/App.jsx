@@ -67,7 +67,6 @@ import SaltCalculator from './components/SaltCalculator';
 import UserProfile from './components/UserProfile';
 import Logout from './components/Logout';
 import Pond from './components/Pond';
-import BlogPage from './components/BlogPage'; // Import the BlogPage component
 import Contact from './components/Contact'; // Import the Contact component
 import TermsOfService from './components/TermsOfService';
 import AdminPage from './components/AdminPage';
@@ -78,6 +77,11 @@ import KoiFish from './components/KoiFish';
 import PondDetails from './components/PondDetails';
 import KoiFishDetails from './components/KoiFishDetails';
 import SelectionPage from './components/SelectionPage';
+import MyOrder from './components/MyOrder';
+import BlogContent from './components/BlogContent';
+import BlogPage from './components/BlogPage'; // Import the BlogPage component
+import BlogDetails from './components/BlogDetails';
+import OrderHistoryPage from './components/OrderHistoryPage';
 //import PrivateRoute from './context/PrivateRoute'; // Import the PrivateRoute component
 
 const App = () => {
@@ -103,7 +107,6 @@ const App = () => {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/logout" element={<Logout />} /> {/* Add the Logout route */}
           <Route path="/pond" element={<Pond />} />
-          <Route path="/blog" element={<BlogPage />} /> {/* Add the BlogPage route */}
           <Route path="/contact" element={<Contact />} /> {/* Add the Contact route */}
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/admin" element={<AdminPage />} />
@@ -131,6 +134,11 @@ const App = () => {
           <Route path="/pond-details" element={<PondDetails />} />
           <Route path="/koi-fish-details" element={<KoiFishDetails />} />
           <Route path="/selection" element={<SelectionPage />} />
+          <Route path="/my-order" element={<MyOrder />} />
+          <Route path="/blog" element={<BlogPage />} /> {/* Add the BlogPage route */}
+          <Route path="/blog/:id" element={<BlogDetails />} />
+          <Route path="/blog-content" element={<BlogContent />} />
+          <Route path="/order-history" element={<OrderHistoryPage />} />
         </Routes>
       </Router>
     </AuthProvider>

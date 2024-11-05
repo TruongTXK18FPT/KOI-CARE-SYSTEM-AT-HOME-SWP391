@@ -94,29 +94,31 @@ public class PondController {
     public ResponseEntity<Void> deletePond(@PathVariable Integer id) {
         return pondService.deletePond(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
-    @GetMapping("/account/details")
-public ResponseEntity<?> getAccountDetails(@RequestHeader("Authorization") String authHeader) {
-    try {
-        String token = authHeader.substring(7);
-        String email = jwtService.extractEmail(token);
 
-        Optional<Account> accountOpt = accountService.findByEmail(email);
-        if (accountOpt.isPresent()) {
-            Account account = accountOpt.get();
-            Map<String, Object> response = new HashMap<>();
-            response.put("accountId", account.getAccountId());
-            response.put("email", account.getEmail());
-            response.put("fullName", account.getFullName());
-            response.put("role", account.getRole());
-            return ResponseEntity.ok(response);
+    @GetMapping("/account/details")
+    public ResponseEntity<?> getAccountDetails(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7);
+            String email = jwtService.extractEmail(token);
+
+            Optional<Account> accountOpt = accountService.findByEmail(email);
+            if (accountOpt.isPresent()) {
+                Account account = accountOpt.get();
+                Map<String, Object> response = new HashMap<>();
+                response.put("accountId", account.getAccountId());
+                response.put("email", account.getEmail());
+                response.put("fullName", account.getFullName());
+                response.put("role", account.getRole());
+                return ResponseEntity.ok(response);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error fetching account details: " + e.getMessage()));
         }
-        return ResponseEntity.notFound().build();
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Error fetching account details: " + e.getMessage()));
     }
-}
-@GetMapping("/getTotalKoi/{pondId}")
+
+    @GetMapping("/getTotalKoi/{pondId}")
     public ResponseEntity<Integer> getTotalKoi(@PathVariable Integer pondId) {
         int totalKoi = pondService.getTotalKoiByPondId(pondId);
         return ResponseEntity.ok(totalKoi);

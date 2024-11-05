@@ -1,22 +1,24 @@
 body {
-  background-color: #f0f0f0; /* Light grey background for the entire page */
+  background-color: #f8f9fa; /* Light grey background for the entire page */
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif; /* Modern font */
 }
 
 .admin-page-container {
-  max-width: 1200px;
+  max-width: 2000px; /* Maximum width for the container */
   margin: 20px auto;
   padding: 20px;
   background-color: #ffffff; /* White background for the container */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
-  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  border-radius: 10px; /* Rounded corners */
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
+  font-size: 2em;
+  color: #343a40; /* Dark grey color for the title */
 }
 
 .admin-actions {
@@ -25,7 +27,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-admin.search-input {
+.admin-actions .search-input {
   flex: 1;
   padding: 10px;
   margin-right: 10px;
@@ -46,16 +48,25 @@ admin.search-input {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-search {
-  background-color: #4CAF50;
+  background-color: #28a745; /* Green color for search button */
   color: white;
 }
 
+.btn-search:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
 .btn-add {
-  background-color: #008CBA;
+  background-color: #007bff; /* Blue color for add button */
   color: white;
+}
+
+.btn-add:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .member-list {
@@ -74,7 +85,16 @@ admin.search-input {
 }
 
 .member-table th {
-  background-color: #f2f2f2;
+  background-color: #343a40; /* Dark grey background for table headers */
+  color: #fff; /* White text for table headers */
+}
+
+.member-table tr:nth-child(even) {
+  background-color: #f8f9fa; /* Light grey background for even rows */
+}
+
+.member-table tr:hover {
+  background-color: #e9ecef; /* Slightly darker grey on hover */
 }
 
 .account-img {
@@ -105,13 +125,21 @@ admin.search-input {
 }
 
 .btn-save {
-  background-color: #4CAF50;
+  background-color: #28a745; /* Green color for save button */
   color: white;
 }
 
+.btn-save:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
 .btn-cancel {
-  background-color: #f44336;
+  background-color: #f44336; /* Red color for cancel button */
   color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #d32f2f; /* Darker red on hover */
 }
 
 .error-message {

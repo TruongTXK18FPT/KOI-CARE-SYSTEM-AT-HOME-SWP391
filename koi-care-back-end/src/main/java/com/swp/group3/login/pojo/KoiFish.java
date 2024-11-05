@@ -3,6 +3,8 @@ package com.swp.group3.login.pojo;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

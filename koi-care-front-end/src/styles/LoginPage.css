@@ -1,7 +1,7 @@
 .login-page {
   display: flex;
   height: 100vh;
-  background-color: #e0f7fa; /* Light cyan background */
+  background-color: salmon; /* Light cyan background */
 }
 
 .login-welcome-message {
@@ -11,17 +11,17 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(to right, #2193b0, salmon); /* Light blue background */
+  background: linear-gradient(to right, #2193b0, salmon); /* Gradient background */
   color: black; /* Black text */
   text-align: center;
 }
 
-.welcome-message h2 {
+.login-welcome-message h2 {
   font-size: 2.5em;
   margin-bottom: 10px;
 }
 
-.welcome-message p {
+.login-welcome-message p {
   font-size: 1.2em;
 }
 
@@ -32,19 +32,21 @@
   justify-content: center;
   align-items: center;
   padding: 40px;
-  background-color: salmon; /* Gradient background for login form */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
-
-.login-container h2 {
-  color:  black; /* Blue for login title */
-  margin-bottom: 20px;
 }
 
 .login-form {
   width: 100%;
-  max-width: 400px;
+  max-width: 500px; /* Increased max-width for the form */
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  padding: 120px; /* Increased padding for the form */
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Increased box-shadow for the form */
+  animation: fadeIn 1s;
+}
+
+.login-container h2 {
+  color: black; /* Black for login title */
+  margin-bottom: 20px;
 }
 
 .login-input-group {
@@ -55,16 +57,23 @@
 .login-icon {
   position: absolute;
   left: 10px;
-  top: 12px;
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the icon */
   color: black; /* Black for icons */
 }
 
 .login-input-group input {
   width: 100%;
-  padding: 15px 40px;
+  padding: 15px 20px 15px 40px; /* Adjust padding to fit within the form and leave space for the icon */
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+}
+
+.login-input-group input:focus {
+  border-color: #2193b0;
+  box-shadow: 0 0 10px rgba(33, 147, 176, 0.5); /* Added box-shadow on focus */
 }
 
 .error {
@@ -73,19 +82,20 @@
 }
 
 .login-btn {
-  background-color: black; /* Blue button */
+  background-color: black; /* Black button */
   color: white;
   padding: 15px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s; /* Added transform transition */
   width: 100%;
 }
 
 .login-btn:hover {
   background-color: #004d40; /* Darker blue on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
 }
 
 .login-links {
@@ -93,11 +103,13 @@
 }
 
 .login-links a {
-  color:  black; /* Blue for links */
+  color: black; /* Black for links */
   text-decoration: none;
+  transition: color 0.3s; /* Added transition for color */
 }
 
 .login-links a:hover {
+  color: #2193b0; /* Change color on hover */
   text-decoration: underline; /* Underline on hover */
 }
 
@@ -106,6 +118,16 @@
   color: #00796b; /* Dark teal for response */
 }
 
-
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
   

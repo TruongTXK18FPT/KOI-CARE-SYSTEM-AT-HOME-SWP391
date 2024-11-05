@@ -1,40 +1,123 @@
-body {
-  background-image: url('../assets/background.jpg');
-  background-size: cover;
-  background-position: center;
-  font-family: Arial, sans-serif;
-  color: #3e2723; /* Dark chocolate color for text */
-}
-
 .pond-container {
-  background-color: rgba(255, 248, 220, 0.9); /* Light chocolate tone with transparency */
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 600px;
-  margin: 50px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pond-container h2 {
-  text-align: center;
-  color: #5d4037; /* Medium chocolate color for headings */
-}
-
-.add-pond-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-.add-pond-form label {
-  display: flex;
   align-items: center;
-  gap: 10px;
-  color: #3e2723; /* Dark chocolate color for labels */
+  justify-content: center;
+  min-height: 100vh; /* Full screen height */
+  width: 100%;
+  background: linear-gradient(to right, #2193b0, salmon); /* Full-screen gradient background */
+  padding: 20px;
 }
 
+.pond-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px; /* Increased max-width for better balance */
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  padding: 40px; /* Padding for the form */
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Increased box-shadow for the form */
+  animation: fadeIn 1s;
+}
+
+.pond-form-container h2 {
+  color: #3e2723; /* Dark chocolate color for the title */
+  margin-bottom: 20px;
+}
+
+.pond-form {
+  width: 100%;
+}
+
+.pond-input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.pond-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the icon */
+  color: #3e2723; /* Dark chocolate color for icons */
+}
+
+.pond-input-group input,
+.pond-input-group select {
+  width: 100%;
+  padding: 15px 20px 15px 40px; /* Adjust padding to fit within the form and leave space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+}
+
+.pond-input-group input:focus,
+.pond-input-group select:focus {
+  border-color: #2193b0;
+  box-shadow: 0 0 10px rgba(33, 147, 176, 0.5); /* Added box-shadow on focus */
+}
+
+.pond-error {
+  color: #e53935; /* Red for error messages */
+  margin-bottom: 15px;
+}
+
+.pond-button {
+  background-color: #3e2723; /* Dark chocolate button */
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s, transform 0.3s; /* Added transform transition */
+  width: 100%;
+}
+
+.pond-button:hover {
+  background-color: #5d4037; /* Darker chocolate on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+.pond-links {
+  margin-top: 15px;
+}
+
+.pond-links a {
+  color: #3e2723; /* Dark chocolate for links */
+  text-decoration: none;
+  transition: color 0.3s; /* Added transition for color */
+}
+
+.pond-links a:hover {
+  color: #2193b0; /* Change color on hover */
+  text-decoration: underline; /* Underline on hover */
+}
+
+.pond-response {
+  margin-top: 20px;
+  color: #00796b; /* Dark teal for response */
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Specific styles for add-pond-form */
 .add-pond-form .icon {
-  color: #8d6e63;
+  color: black;
   font-size: 1.2em;
 }
 
@@ -51,14 +134,9 @@ body {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #8d6e63; /* Medium chocolate color for button */
+  background-color: black; /* Medium chocolate color for button */
   color: white;
   font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s;
 }
-
-.add-pond-form button:hover {
-  background-color: #6d4c41; /* Darker chocolate color for button hover */
-}
-

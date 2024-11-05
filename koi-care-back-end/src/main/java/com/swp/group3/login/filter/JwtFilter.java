@@ -33,7 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
             "/product/filter",
             "/product/sort",
             "/product/{id:[\\d]+}",
-            "/product/{id:[\\d]+}/related");
+            "/product/{id:[\\d]+}/related",
+            "/api/blogs/getAll"
+            );
+            
 
 
     @Override

@@ -3,6 +3,8 @@ package com.swp.group3.login.pojo;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,8 +57,26 @@ public class Account {
     @Column(name = "status", nullable = false)
     private Status status;
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Pond> ponds;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Order> orders;
 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Blog> blogs;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<BlogFeedBack> feedbacks;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Post> posts;
+    // @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    // // @JsonIgnore
+    // // private List<Order> orders;
     // Enum for Role
     public enum Role {
         admin, member, manager
@@ -177,34 +197,21 @@ public class Account {
     public void setStatus(Status status) {
         this.status = status;
     }
+    
+    public List<Pond> getPonds() {
+        return ponds;
+    }
 
-    // @Override
-    // public Collection<? extends GrantedAuthority> getAuthorities() {
-    // return List.of(new SimpleGrantedAuthority(role.name()));
-    // }
+    public void setPonds(List<Pond> ponds) {
+        this.ponds = ponds;
+    }
 
-    // @Override
-    // public String getUsername() {
-    // return accountName;
-    // }
+    public List<Order> getOrders() {
+        return orders;
+    }
 
-    // @Override
-    // public boolean isAccountNonExpired() {
-    // return true;
-    // }
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 
-    // @Override
-    // public boolean isAccountNonLocked() {
-    // return true;
-    // }
-
-    // @Override
-    // public boolean isCredentialsNonExpired() {
-    // return true;
-    // }
-
-    // @Override
-    // public boolean isEnabled() {
-    // return status == Status.active;
-    // }
 }

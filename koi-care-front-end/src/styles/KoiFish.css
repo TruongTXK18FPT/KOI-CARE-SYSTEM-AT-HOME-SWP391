@@ -1,40 +1,51 @@
 body {
-    background-image: url('../assets/background.jpg');
-    background-size: cover;
-    background-position: center;
-    font-family: Arial, sans-serif;
-    color: #3e2723; /* Dark chocolate color for text */
-  }
-  
-  .koifish-container {
-    background-color: rgba(255, 248, 220, 0.9); /* Light chocolate tone with transparency */
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 50px auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .koifish-container h2 {
-    text-align: center;
-    color: #5d4037; /* Medium chocolate color for headings */
-  }
-  
-  .add-koi-form, .edit-koi-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+  background-image: url('../assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+  color: #3e2723; /* Dark chocolate color for text */
+}
+
+.koifish-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Full screen height */
+  width: 100%;
+  background: linear-gradient(to right, #2193b0, salmon); /* Gradient background */
+  padding: 40px; /* Increased padding for better spacing */
+  border-radius: 0; /* Remove border-radius for full screen */
+  box-shadow: none; /* Remove box-shadow for full screen */
+  margin: 0; /* Remove margin for full screen */
+}
+
+.koifish-container h2 {
+  text-align: center;
+  color: #5d4037; /* Medium chocolate color for headings */
+}
+
+.add-koi-form, .edit-koi-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%; /* Ensure forms take full width */
+  max-width: 600px; /* Limit max-width for better readability */
+  background-color: #fff8dc; /* Light chocolate tone for form background */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
   
   .add-koi-form label, .edit-koi-form label {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #3e2723; /* Dark chocolate color for labels */
+    color: black; /* Dark chocolate color for labels */
   }
   
   .add-koi-form .icon, .edit-koi-form .icon {
-    color: #8d6e63;
+    color: black;
     font-size: 1.2em;
   }
   
@@ -51,7 +62,7 @@ body {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #8d6e63; /* Medium chocolate color for button */
+    background-color: black; /* Medium chocolate color for button */
     color: white;
     font-size: 1em;
     cursor: pointer;

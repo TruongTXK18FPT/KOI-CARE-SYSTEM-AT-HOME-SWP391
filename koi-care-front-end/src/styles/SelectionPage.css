@@ -4,9 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-image: url(../assets/background.jpg);
-    background-position: center;
-    background-size: cover;
+    background: linear-gradient(to right, salmon, #2193b0); 
     font-family: 'Arial', sans-serif;
     text-align: center;
     padding: 2rem;
@@ -26,9 +24,7 @@
   }
   
   .card {
-    background-image: url(../assets/productbackground.jpg);
-    background-size: cover;
-    background-position: center;
+    background-color: aliceblue;
 
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

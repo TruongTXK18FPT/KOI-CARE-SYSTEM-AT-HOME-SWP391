@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: lightgoldenrodyellow; /* Light chocolate tone */
+  background: linear-gradient(to right ,salmon,#2193b0); /* Match HomePage background color */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #3e2723; /* Dark chocolate color for text */
+  color: black; /* Match HomePage text color */
   font-size: 1.5em;
   font-weight: bold;
 }
@@ -35,10 +35,11 @@
   text-decoration: none;
   font-size: 1em;
   transition: color 0.3s;
+  color: black; /* Default link color to match HomePage text color */
 }
 
 .nav-links a:hover {
-  color: #007bff; /* Blue color for hover */
+  color: #2193b0; /* Blue color for hover to match gradient */
 }
 
 .nav-links .home-link {

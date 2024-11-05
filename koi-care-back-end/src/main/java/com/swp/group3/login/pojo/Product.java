@@ -1,11 +1,16 @@
 package com.swp.group3.login.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 @Table(name = "Product")
@@ -32,7 +37,6 @@ public class Product {
 
     @Column(name = "imageUrl")
     private String imageUrl;
-
     public int getProductID() {
         return productID;
     }
@@ -84,5 +88,4 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
 }

@@ -1,21 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import '../styles/KoiFishDetails.css'; // Import the CSS file for styling
 
 const KoiFishDetails = () => {
+  const navigate = useNavigate(); // Get the navigate function from react-router-dom
   const [koiFish, setKoiFish] = useState([]);
   const [selectedKoi, setSelectedKoi] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [ponds, setPonds] = useState([]);
+  const [selectedPondId, setSelectedPondId] = useState(''); // Set initial value to an empty string
+
+  const fetchAccountPonds = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from localStorage
+      if (!token) {
+        console.error('No token found, redirecting to login');
+        navigate('/login'); // Redirect to login if no token found
+        return;
+      }
+
+      const accountResponse = await axios.get('http://localhost:8080/api/ponds/account/details', {
+        headers: {
+          Authorization: `Bearer ${token}` // Include the token in the headers
+        }
+      });
+
+      if (accountResponse.status === 200) {
+        const accountId = accountResponse.data.accountId;
+        const pondsResponse = await axios.get(`http://localhost:8080/api/ponds/account/getByAccountId/${accountId}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // Include the token for this request as well
+          }
+        });
+
+        if (pondsResponse.status === 200) {
+          setPonds(pondsResponse.data.content); // Set the ponds associated with the account
+          if (pondsResponse.data.content.length > 0) {
+            setSelectedPondId(pondsResponse.data.content[0].id); // Set the first pond as the selected pond
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching ponds:', error.response ? error.response.data : error.message);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchAccountPonds();
+  }, [fetchAccountPonds]);
 
   useEffect(() => {
     const fetchKoiFish = async () => {
+      if (!selectedPondId) {
+        console.error('Pond ID is undefined');
+        return;
+      }
       try {
         const token = localStorage.getItem('token'); // Get the token from localStorage
-        const response = await axios.get(`http://localhost:8080/api/koifish/getAll?page=${page}&size=10`, {
+        const response = await axios.get(`http://localhost:8080/api/koifish/pond/getByPondId/${selectedPondId}?page=${page}&size=10`, {
           headers: {
             Authorization: `Bearer ${token}` // Include the token in the headers
           }
@@ -23,12 +70,16 @@ const KoiFishDetails = () => {
         setKoiFish(response.data.content);
         setTotalPages(response.data.totalPages);
       } catch (error) {
-        console.error('Error fetching koi fish:', error);
+        if (error.response && error.response.status === 404) {
+          console.error('Pond not found:', error.response.data);
+        } else {
+          console.error('Error fetching koi fish:', error);
+        }
       }
     };
 
     fetchKoiFish();
-  }, [page]);
+  }, [selectedPondId, page]);
 
   const handleUpdateKoi = (koi) => {
     setSelectedKoi(koi);
@@ -39,7 +90,7 @@ const KoiFishDetails = () => {
     try {
       const token = localStorage.getItem('token'); // Get the token from localStorage
       await axios.delete(`http://localhost:8080/api/koifish/delete/${fishId}`, {
- headers: {
+        headers: {
           Authorization: `Bearer ${token}` // Include the token in the headers
         }
       });
@@ -74,9 +125,22 @@ const KoiFishDetails = () => {
     setPage(newPage);
   };
 
+  const handlePondChange = (e) => {
+    setSelectedPondId(e.target.value);
+  };
+
   return (
     <div className="koifish-details-container">
       <h2>Existing Koi Fish</h2>
+      <label>
+        Select Pond:
+        <select value={selectedPondId || ''} onChange={handlePondChange}>
+          <option value="">Select Pond</option>
+          {ponds.map(pond => (
+            <option key={pond.id} value={pond.id}>{pond.name}</option>
+          ))}
+        </select>
+      </label>
       <div className="koi-list">
         {koiFish.map(koi => (
           <div key={koi.fish_id} className="koi">
@@ -91,7 +155,7 @@ const KoiFishDetails = () => {
             <p>Variety: {koi.variety}</p>
             <p>In Pond Since: {koi.inPondSince}</p>
             <p>Breeder: {koi.breeder}</p>
-            <p>Purchase Price: ${koi.purchasePrice}</p>
+            <p>Purchase Price: {koi.purchasePrice} VND</p>
             {koi.imageFish && <img src={koi.imageFish} alt={koi.nameFish} className="koi-image" />}
             <button onClick={() => handleUpdateKoi(koi)} className="update-btn">
               <FontAwesomeIcon icon={faEdit} /> Update

@@ -76,7 +76,6 @@ const Pond = () => {
     }
 };
 
-
   const handleViewPonds = () => {
     navigate('/pond-details');
   };
@@ -93,7 +92,7 @@ const Pond = () => {
           <input type="text" name="name" placeholder="Pond Name" value={newPond.name} onChange={handleInputChange} required />
         </label>
         <label>
-          <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Volume:
+          <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Volume(l):
           <input type="number" name="volume" placeholder="Volume" value={newPond.volume} onChange={handleInputChange} required />
         </label>
         <label>
@@ -101,7 +100,7 @@ const Pond = () => {
           <input type="number" name="drainCount" placeholder="Drain Count" value={newPond.drainCount} onChange={handleInputChange} required />
         </label>
         <label>
-          <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Depth:
+          <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Depth(m):
           <input type="number" name="depth" placeholder="Depth" value={newPond.depth} onChange={handleInputChange} required />
         </label>
         <label>

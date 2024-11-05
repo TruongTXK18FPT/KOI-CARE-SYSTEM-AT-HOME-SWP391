@@ -1,87 +1,82 @@
-import React from 'react';
-import BlogGrid from './BlogGrid'; // Ensure this component is correctly imported
-import '../styles/BlogPage.css'; // Import the CSS file
-import SearchBar from './SearchBar';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import BlogGrid from './BlogGrid';
+import '../styles/BlogPage.css';
 
 const BlogPage = () => {
-  const blogs = [
-    {
-      id: 1,
-      title: 'Welcome to my website',
-      content: 'This is the first blog post on my website...',
-      author: 'John Doe',
-      authorImage: require('../assets/author.jpeg'), // Ensure this image exists
-      blogImage: require('../assets/slide1.jpg'), // Ensure this image exists
-      createdDate: 'January 1, 2023',
-      description: 'This is the first blog post on my website...',
-    },
-    {
-      id: 2,
-      title: 'Koi Care system at home',
-      content: 'Overview of Koi Care system...',
-      author: 'Jane',
-      authorImage: require('../assets/author1.jpeg'), // Ensure this image exists
-      blogImage: require('../assets/LogoWeb.jpg'), // Ensure this image exists
-      createdDate: 'February 15, 2023',
-      description: 'Overview of Koi Care system...',
-    },
-    {
-      id: 3,
-      title: 'How to use the calculator',
-      content: 'Step-by-step guide to using the calculator...',
-      author: 'Alice',
-      authorImage: require('../assets/author2.jpg'), // Ensure this image exists
-      blogImage: require('../assets/calcu.jpg'), // Ensure this image exists
-      createdDate: 'March 30, 2023',
-      description: 'Step-by-step guide to using the calculator...',
-    },
-    {
-      id: 4,
-      title: 'How to create an account',
-      content: 'Instructions on creating an account...',
-      author: 'Jack',
-      authorImage: require('../assets/author3.jpg'), // Ensure this image exists
-      blogImage: require('../assets/AccountIcon.jpg'), // Ensure this image exists
-      createdDate: 'April 10, 2023',
-      description: 'Instructions on creating an account...',
-    },
-    {
-      id: 5,
-      title: 'Receiving email notifications',
-      content: 'Setting up email notifications...',
-      author: 'MaiKa',
-      authorImage: require('../assets/author4.jpg'), // Ensure this image exists
-      blogImage: require('../assets/email.png'), // Ensure this image exists
-      createdDate: 'May 20, 2023',
-      description: 'Setting up email notifications...',
-    },
-    {
-      id: 6,
-      title: 'How to manage koi in the pond',
-      content: 'Exploring the pond feature...',
-      author: 'Maika',
-      authorImage: require('../assets/author4.jpg'), // Ensure this image exists
-      blogImage: require('../assets/blog6.jpeg'), // Ensure this image exists
-      createdDate: 'June 30, 2023',
-      description: 'Exploring the pond feature...',
-    },
-    {
-      id: 7,
-      title: 'How to control salt levels',
-      content: 'Salt levels in the pond...',
-      author: 'Maika',
-      blogImage: require('../assets/blog7.jpeg'), // Ensure this image exists
-      authorImage: require('../assets/author4.jpg'), // Ensure this image exists
-      createdDate: 'June 30, 2024',
-      description: 'Salt levels in the pond...',
+  const [blogs, setBlogs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOption, setSortOption] = useState('title'); // Default sort option to a valid property
+  const navigate = useNavigate();
+
+  const fetchBlogs = useCallback(async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/blogs/getAll', {
+        params: { sort: sortOption }
+      });
+      setBlogs(response.data.content);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Request data:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
     }
-  ];
+  }, [sortOption]);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]);
+
+  const handleNewBlog = () => {
+    const userRole = localStorage.getItem('userRole') || 'guest'; // logic to check if user is logged in
+    if (userRole === 'guest') {
+      alert('Please login to write a blog');
+      navigate('/login');
+    } else {
+      navigate('/blog-content');
+    }
+  };
+
+  const filteredBlogs = blogs
+    .filter(blog => blog.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (sortOption === 'title') {
+        return a.title.localeCompare(b.title);
+      } else if (sortOption === 'createdDate') {
+        return new Date(b.createdDate) - new Date(a.createdDate);
+      }
+      return 0;
+    });
 
   return (
     <div className="blog-page">
-      <SearchBar/>
-      <BlogGrid blogs={blogs} />
+      <h1 className="blog-page-title">Blog Page</h1>
+      <div className="blog-page-controls">
+        <input
+          type="text"
+          placeholder="Search by title"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="blog-page-search"
+        />
+        <button onClick={() => {}} className="blog-page-search-button">Search</button>
+        <div className="blog-page-sort">
+          <label>Sort by: </label>
+          <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+            <option value="title">Title</option>
+            <option value="createdDate">Created Date</option>
+          </select>
+        </div>
+        <button onClick={handleNewBlog} className="blog-page-new-button">+ New Blog</button>
+      </div>
+      <BlogGrid blogs={filteredBlogs} />
     </div>
   );
 };

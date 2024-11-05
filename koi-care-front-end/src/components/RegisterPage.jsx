@@ -38,8 +38,8 @@ const RegisterPage = () => {
 
   return (
     <div className="register-page">
-      <div className="welcome-message">
-        <h1>Welcome to the Koi Care System!</h1>
+      <div className="register-welcome-message">
+        <h2>Welcome to the Koi Care System!</h2>
         <p>Please fill out the form below to create your account.</p>
       </div>
       <div className="register-container">

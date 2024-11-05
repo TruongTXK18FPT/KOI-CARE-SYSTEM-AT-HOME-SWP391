@@ -3,6 +3,7 @@ package com.swp.group3.login.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.swp.group3.login.pojo.Product;
 import com.swp.group3.login.repository.ProductRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProductService implements IProductService {
@@ -81,5 +84,22 @@ public class ProductService implements IProductService {
     @Override
     public Product addProduct(Product product) {
         return productRepository.save(product);
+    }
+    @Override
+    public Product updateProduct(Integer id, Product product) {
+        Optional<Product> existingProductOpt = productRepository.findById(id);
+        if (existingProductOpt.isPresent()) {
+            Product existingProduct = existingProductOpt.get();
+            existingProduct.setProductName(product.getProductName());
+            existingProduct.setDescription(product.getDescription());
+            existingProduct.setPrice(product.getPrice());
+            existingProduct.setCategory(product.getCategory());
+            existingProduct.setImageUrl(product.getImageUrl()); // Update imageUrl
+            existingProduct.setStockQuantity(product.getStockQuantity()); // Update stockQuantity
+            // Update other fields as necessary
+            return productRepository.save(existingProduct);
+        } else {
+            throw new EntityNotFoundException("Product not found");
+        }
     }
 }

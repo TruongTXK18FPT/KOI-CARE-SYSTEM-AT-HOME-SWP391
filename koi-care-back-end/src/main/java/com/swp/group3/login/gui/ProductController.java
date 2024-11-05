@@ -68,4 +68,21 @@ public class ProductController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody Product product) {
+        try {
+            Product updatedProduct = productService.updateProduct(id, product);
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("data", updatedProduct);
+            response.put("message", "Product updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", "Failed to update product: " + e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
 }

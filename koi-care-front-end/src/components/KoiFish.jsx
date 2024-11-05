@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faFish, faImage, faSortNumericUp, faRulerVertical, faCalendarAlt, faWeight, faVenusMars, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import {  faFish, faImage, faSortNumericUp, faRulerVertical, faCalendarAlt, faWeight, faVenusMars, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import '../styles/KoiFish.css'; // Import the CSS file for styling
 
 const KoiFish = () => {
@@ -108,17 +108,10 @@ const KoiFish = () => {
     }
   };
 
-  const handleViewKoiFish = () => {
-    navigate('/koi-fish-details');
-  };
 
   return (
     <div className="koifish-container">
       <h2>Koi Fish Management</h2>
-      <button onClick={handleViewKoiFish} className="view-koi-btn">
-        <FontAwesomeIcon icon={faEye} /> View Existing Koi Fish
-      </button>
-      
       {/* Display success message */}
       {successMessage && <div className="success-message">{successMessage}</div>}
 

@@ -10,45 +10,103 @@
 
 .welcome-message {
   text-align: center;
+  color: #fff;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.1);
+}
+
+.register-container {
+  max-width: 400px;
+  width: 100%;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 1s;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.welcome-message h1 {
-  font-size: 2.5rem;
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.register-icon {
+  margin-right: 10px;
+  color: #2193b0;
+}
+
+.register-input-group input,
+.register-input-group select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.register-input-group input:focus,
+.register-input-group select:focus {
+  border-color: #2193b0;
+  outline: none;
+}
+
+.register-button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.register-button:hover {
+  background-color: #45a049;
+}.register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, salmon, #2193b0); /* Full-screen gradient background */
+  padding: 20px;
+}
+
+.register-welcome-message {
+  text-align: center;
+  margin-bottom: 20px;
+  color: black; /* Black text */
+}
+
+.register-welcome-message h2 {
+  font-size: 2.5em;
   margin-bottom: 10px;
-  color: black;
-  animation: slideIn 1s;
 }
 
-.welcome-message p {
-  font-size: 1.2rem;
-  color: white;
-  animation: slideIn 1s;
+.register-welcome-message p {
+  font-size: 1.2em;
 }
 
 .register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
-  max-width: 600px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 30px;
+  max-width: 500px; /* Increased max-width for better balance */
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  padding: 40px; /* Increased padding for the form */
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Increased box-shadow for the form */
   animation: fadeIn 1s;
 }
 
-.register-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+.register-container h2 {
+  color: black; /* Black for register title */
+  margin-bottom: 20px;
 }
 
 .register-input-group {
@@ -59,42 +117,70 @@
 .register-icon {
   position: absolute;
   left: 10px;
-  top: 40%; /* Adjusted top property to move the icon above */
-  transform: translateY(-50%);
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the icon */
   color: black; /* Black for icons */
 }
 
 .register-input-group input,
 .register-input-group select {
   width: 100%;
-  padding: 15px 40px;
+  padding: 15px 20px 15px 40px; /* Adjust padding to fit within the form and leave space for the icon */
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
 }
 
 .register-input-group input:focus,
 .register-input-group select:focus {
-  border: 2px solid #6dd5ed;
+  border-color: #2193b0;
+  box-shadow: 0 0 10px rgba(33, 147, 176, 0.5); /* Added box-shadow on focus */
+}
+
+.register-error {
+  color: #e53935; /* Red for error messages */
+  margin-bottom: 15px;
 }
 
 .register-button {
-  background: #2193b0;
+  background-color: black; /* Black button */
   color: white;
   padding: 15px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1em;
-  transition: background 0.3s, transform 0.3s;
-  margin-top: 20px;
+  transition: background-color 0.3s, transform 0.3s; /* Added transform transition */
+  width: 100%;
 }
 
 .register-button:hover {
-  background: #6dd5ed;
-  transform: scale(1.05);
+  background-color: #004d40; /* Darker blue on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
 }
 
+.register-links {
+  margin-top: 15px;
+}
+
+.register-links a {
+  color: black; /* Black for links */
+  text-decoration: none;
+  transition: color 0.3s; /* Added transition for color */
+}
+
+.register-links a:hover {
+  color: #2193b0; /* Change color on hover */
+  text-decoration: underline; /* Underline on hover */
+}
+
+.register-response {
+  margin-top: 20px;
+  color: #00796b; /* Dark teal for response */
+}
+
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -105,19 +191,6 @@
     transform: translateY(0);
   }
 }
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
 
 
   

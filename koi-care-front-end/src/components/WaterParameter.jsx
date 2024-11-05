@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWater, faClock, faThermometerHalf, faTint, faFlask, faVial, faLeaf, faCloud, faUtensils, faStickyNote, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import '../styles/WaterParameter.css';
 import Modal from 'react-modal';
+Modal.setAppElement('#root');
 const WaterParameter = () => {
   const [formData, setFormData] = useState({
     pond_id: '',
@@ -254,12 +255,12 @@ const WaterParameter = () => {
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.ammonium)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faFlask} /> KH (mg/l):
+          <FontAwesomeIcon icon={faFlask} /> KH (°dH):
           <input type="number" step="0.01" name="potassiumHydride" value={formData.potassiumHydride} onChange={handleChange} />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.potassiumHydride)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faFlask} /> GH (mg/l):
+          <FontAwesomeIcon icon={faFlask} /> GH (°dH):
           <input type="number" step="0.01" name="generalHardness" value={formData.generalHardness} onChange={handleChange} />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.generalHardness)} />
         </label>
@@ -306,8 +307,8 @@ const WaterParameter = () => {
           <p>Phosphate (PO4): {param.phosphate} mg/l</p>
           <p>pH-Value: {param.pHValue}</p>
           <p>Ammonium (NH4): {param.ammonium} mg/l</p>
-          <p>KH: {param.potassiumHydride} mg/l</p>
-          <p>GH: {param.generalHardness} mg/l</p>
+          <p>KH: {param.potassiumHydride} °dH</p>
+          <p>GH: {param.generalHardness} °dH</p>
           <p>CO2: {param.carbonDioxide} mg/l</p>
           <p>Salt: {param.salt} %</p>
           <p>Total Chlorines: {param.totalChlorines} mg/l</p>

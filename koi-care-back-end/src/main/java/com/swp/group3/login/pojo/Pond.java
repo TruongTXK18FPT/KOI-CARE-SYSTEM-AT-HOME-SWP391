@@ -2,6 +2,8 @@ package com.swp.group3.login.pojo;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,8 +46,10 @@ public class Pond {
     private float depth;
     @Column(name = "skimmerCount")
     private int skimmerCount;
+
     @OneToMany(mappedBy = "pond",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KoiFish> koiFishList;
+
      @OneToMany(mappedBy = "pond", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WaterParameter> waterParameters;
     public Pond() {
