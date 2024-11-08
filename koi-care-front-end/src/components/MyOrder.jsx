@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../styles/MyOrder.css';
 
 const MyOrder = () => {
@@ -8,6 +9,7 @@ const MyOrder = () => {
     paymentMethod: 'cashOnDelivery',
   });
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,6 +76,12 @@ const MyOrder = () => {
         <div className="order-success-message">
           <h3>Order Successful!</h3>
           <p>Your order has been placed successfully.</p>
+          <button onClick={() => navigate('/shop')} className="back-to-shop-button">
+            Back to Shop
+          </button>
+          <button onClick={() => navigate('/order-history')} className="view-order-button">
+            View Order
+          </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="order-form">

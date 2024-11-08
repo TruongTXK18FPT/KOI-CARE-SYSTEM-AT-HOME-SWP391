@@ -10,7 +10,7 @@
 
 .water-parameter-container h2 {
   font-size: 2.5rem;
-  color: white;
+  color: black;
   margin-bottom: 20px;
   animation: slideIn 1s;
 }
@@ -131,12 +131,12 @@
 }
 
 .modal h2 {
-  color: white; /* White color for headings */
+  color: black; /* White color for headings */
   margin-bottom: 15px;
 }
 
 .modal p {
-  color: white; /* White color for paragraph text */
+  color: black; /* White color for paragraph text */
   margin-bottom: 15px;
   line-height: 1.6; /* Improved line height for readability */
 }

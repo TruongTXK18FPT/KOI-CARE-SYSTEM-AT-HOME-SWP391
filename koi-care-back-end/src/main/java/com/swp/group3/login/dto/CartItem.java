@@ -5,7 +5,7 @@ public class CartItem {
     private String productName;
     private String imageUrl;
     private int quantity;
-    private double unitPrice;
+    private double unitPrice; // Ensure this field is used for price
     private int accountId;
 
     public CartItem() {
@@ -73,5 +73,4 @@ public class CartItem {
         return "CartItem [productId=" + productId + ", productName=" + productName + ", imageUrl=" + imageUrl
                 + ", quantity=" + quantity + ", unitPrice=" + unitPrice + ", accountId=" + accountId + "]";
     }
-
 }

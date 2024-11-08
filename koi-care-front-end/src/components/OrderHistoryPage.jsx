@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTruck, faBox, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTruck, faBox, faTimes, faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../styles/OrderHistoryPage.css';
 
 const OrderHistoryPage = () => {
@@ -13,8 +14,9 @@ const OrderHistoryPage = () => {
 
   const accountId = localStorage.getItem('accountId');
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get(`http://localhost:8080/api/orders/history/${accountId}`, {
@@ -34,13 +36,13 @@ const OrderHistoryPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [accountId, token]);
 
   useEffect(() => {
     if (accountId && token) {
       fetchOrders();
     }
-  }, [accountId, token]);
+  }, [accountId, token, fetchOrders]);
 
   const cancelOrder = async (orderId) => {
     setCancelLoading(orderId);
@@ -190,6 +192,15 @@ const OrderHistoryPage = () => {
             ))}
           </div>
         )}
+
+        <button
+          onClick={() => navigate('/shop')}
+          className="back-to-shop-button"
+          aria-label="Back to Shop"
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+          <span>Back to Shop</span>
+        </button>
       </div>
     </div>
   );

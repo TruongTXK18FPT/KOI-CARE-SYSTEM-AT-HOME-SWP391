@@ -145,6 +145,7 @@ const ProductManagement = () => {
           value={form.imageUrl}
           onChange={handleInputChange}
           placeholder="Image URL"
+          className="image-url-input"
         />
         <input
           type="number"
@@ -181,7 +182,7 @@ const ProductManagement = () => {
               <td>{product.price}</td>
               <td>{product.description}</td>
               <td>
-                {product.imageUrl && <img src={product.imageUrl} alt={product.productName} className="product-image" />}
+                {product.imageUrl && <img src={product.imageUrl} alt={product.productName} className="product-management-image" />}
               </td>
               <td>{product.stockQuantity}</td>
               <td>

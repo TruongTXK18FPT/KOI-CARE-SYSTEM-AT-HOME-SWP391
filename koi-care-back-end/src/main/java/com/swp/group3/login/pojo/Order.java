@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -140,5 +141,9 @@ public class Order {
 
     public void setOrderDetails(List<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+ @JsonProperty("customerFullName")
+    public String getCustomerFullName() {
+        return account != null ? account.getFullName() : null;
     }
 }

@@ -1,6 +1,7 @@
 package com.swp.group3.login.service;
 
 import com.swp.group3.login.pojo.Order;
+import com.swp.group3.login.pojo.Order.OrderStatus;
 import com.swp.group3.login.pojo.OrderDetails;
 import com.swp.group3.login.pojo.Product;
 import com.swp.group3.login.dto.CartItem;
@@ -19,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class OrderService implements IOrderService {
@@ -174,5 +177,24 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(Order.OrderStatus.valueOf(status.toLowerCase()));
         orderRepository.save(order);
+    }
+ @Override
+    public Page<Order> sortOrdersByDate(String sortOrder, Pageable pageable) {
+        if ("asc".equalsIgnoreCase(sortOrder)) {
+            return orderRepository.findAllByOrderByOrderDateAsc(pageable);
+        } else {
+            return orderRepository.findAllByOrderByOrderDateDesc(pageable);
+        }
+    }
+
+    @Override
+    public Page<Order> filterOrdersByStatus(String status, Pageable pageable) {
+        OrderStatus orderStatus = OrderStatus.valueOf(status.toLowerCase());
+        return orderRepository.findByStatus(orderStatus, pageable);
+    }
+
+    @Override
+    public Page<Order> searchOrders(String keyword, Pageable pageable) {
+        return orderRepository.findByAccountFullNameContainingIgnoreCase(keyword, pageable);
     }
 }

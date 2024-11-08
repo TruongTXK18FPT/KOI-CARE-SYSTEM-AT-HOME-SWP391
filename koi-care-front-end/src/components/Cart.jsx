@@ -33,7 +33,7 @@ const Cart = ({ cartItems, total, onClose, onRemoveItem, onClearCart, loading })
         <>
           <ul className="cart-items-list">
             {cartItems.map((item) => {
-              const price = item.price || 0;
+              const price = item.unitPrice || 0;
               const quantity = item.quantity || 0;
               const itemTotal = (price * quantity).toFixed(2);
 

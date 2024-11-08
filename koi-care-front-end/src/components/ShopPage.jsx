@@ -192,23 +192,23 @@ const ShopPage = () => {
   const handleFiltersChange = (newFilters) => {
     setFilters(prev => ({
       ...prev,
-      ...newFilters,
-      currentPage: 0
+      ...newFilters
     }));
   };
 
   const handleCategoryClick = (selectedCategory) => {
     handleFiltersChange({
-      category: selectedCategory === filters.category ? '' : selectedCategory
+      category: selectedCategory === filters.category ? '' : selectedCategory,
+      currentPage: 0
     });
   };
 
   const handleSortChange = (value) => {
-    handleFiltersChange({ sortBy: value });
+    handleFiltersChange({ sortBy: value, currentPage: 0 });
   };
 
   const handleSearchChange = (value) => {
-    handleFiltersChange({ searchKeyword: value });
+    handleFiltersChange({ searchKeyword: value, currentPage: 0 });
   };
 
   const filteredProducts = state.products.filter(

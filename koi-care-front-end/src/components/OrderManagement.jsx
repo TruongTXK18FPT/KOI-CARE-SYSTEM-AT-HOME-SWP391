@@ -8,18 +8,43 @@ const OrderManagement = () => {
   const [error, setError] = useState(null);
   const [updateLoading, setUpdateLoading] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [filters, setFilters] = useState({
+    searchKeyword: '',
+    sortOrder: 'newest',
+    statusFilter: ''
+  });
 
   const token = localStorage.getItem('token');
+  const accountId = localStorage.getItem('accountId'); // Retrieve accountId from local storage
 
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/manager/orders', {
+      let url = 'http://localhost:8080/api/orders';
+      let params = {};
+
+      if (filters.searchKeyword) {
+        url += '/search';
+        params.keyword = filters.searchKeyword;
+      } else if (filters.statusFilter) {
+        url += '/filter';
+        params.status = filters.statusFilter;
+      } else if (filters.sortOrder) {
+        url += '/sort';
+        params.sortOrder = filters.sortOrder;
+      }
+
+      const response = await axios.get(url, {
         headers: {
           'Authorization': `Bearer ${token}`
+        },
+        params: {
+          ...params,
+          size: 10
         }
       });
-      setOrders(response.data);
+
+      setOrders(response.data.content || response.data);
       setError(null);
     } catch (err) {
       setError('Failed to fetch orders. Please try again later.');
@@ -30,14 +55,14 @@ const OrderManagement = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [filters]);
 
   const updateOrderStatus = async (orderId, status) => {
     setUpdateLoading(orderId);
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/manager/update',
-        { orderID: orderId, status },
+      const response = await axios.put(
+        `http://localhost:8080/api/orders/${orderId}/status/account/${accountId}`,
+        { status },
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -60,6 +85,25 @@ const OrderManagement = () => {
     } finally {
       setUpdateLoading(null);
     }
+  };
+
+  const handleFiltersChange = (newFilters) => {
+    setFilters(prev => ({
+      ...prev,
+      ...newFilters
+    }));
+  };
+
+  const handleSortChange = (e) => {
+    handleFiltersChange({ sortOrder: e.target.value });
+  };
+
+  const handleSearchChange = (e) => {
+    handleFiltersChange({ searchKeyword: e.target.value });
+  };
+
+  const handleStatusFilterChange = (e) => {
+    handleFiltersChange({ statusFilter: e.target.value });
   };
 
   if (loading) {
@@ -86,6 +130,28 @@ const OrderManagement = () => {
         </div>
       )}
 
+      <div className="filters">
+        <input
+          type="text"
+          placeholder="Search by customer name..."
+          value={filters.searchKeyword}
+          onChange={handleSearchChange}
+        />
+        <select value={filters.sortOrder} onChange={handleSortChange}>
+          <option value="newest">Newest to Oldest</option>
+          <option value="oldest">Oldest to Newest</option>
+          <option value="a-z">A to Z</option>
+          <option value="z-a">Z to A</option>
+        </select>
+        <select value={filters.statusFilter} onChange={handleStatusFilterChange}>
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancel">Cancel</option>
+        </select>
+      </div>
+
       <table className="order-table">
         <thead>
           <tr>
@@ -101,7 +167,7 @@ const OrderManagement = () => {
             <tr key={order.orderID}>
               <td>{order.orderID}</td>
               <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-              <td>{order.customerName}</td>
+              <td>{order.customerFullName}</td>
               <td>{order.status}</td>
               <td>
                 <select

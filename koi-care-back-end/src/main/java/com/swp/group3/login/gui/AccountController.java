@@ -72,6 +72,7 @@ public class AccountController {
             response.put("email", account.getEmail());
             response.put("role", account.getRole());
             response.put("fullName", account.getFullName());
+            response.put("accountId", account.getAccountId());
 
             return ResponseEntity.ok().body(response);
         }

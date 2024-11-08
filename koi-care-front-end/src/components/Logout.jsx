@@ -44,7 +44,7 @@ const Logout = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('userRole');
       localStorage.removeItem('userFullName');
-      
+      localStorage.removeItem ('accountId'); 
       // Update the authentication state
       logout();
 

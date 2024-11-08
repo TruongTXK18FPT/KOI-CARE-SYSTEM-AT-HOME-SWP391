@@ -23,6 +23,7 @@ const LoginPage = () => {
         localStorage.setItem('userRole', response.data.role);
         localStorage.setItem('userFullName', response.data.fullName);
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('accountId', response.data.accountId);
 
         if (response.data.role === 'admin') {
           navigate('/admin');

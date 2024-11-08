@@ -8,6 +8,9 @@ import com.swp.group3.login.service.ICartService;
 import com.swp.group3.login.repository.AccountRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,4 +103,39 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/sort")
+    public ResponseEntity<?> sortOrdersByDate(
+            @RequestParam String sortOrder,
+            @PageableDefault(size = 10) Pageable pageable) {
+        try {
+            Page<Order> orders = orderService.sortOrdersByDate(sortOrder, pageable);
+            return ResponseEntity.ok().body(orders);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterOrdersByStatus(
+            @RequestParam String status,
+            @PageableDefault(size = 10) Pageable pageable) {
+        try {
+            Page<Order> orders = orderService.filterOrdersByStatus(status, pageable);
+            return ResponseEntity.ok().body(orders);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchOrders(
+            @RequestParam String keyword,
+            @PageableDefault(size = 10) Pageable pageable) {
+        try {
+            Page<Order> orders = orderService.searchOrders(keyword, pageable);
+            return ResponseEntity.ok().body(orders);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
 }

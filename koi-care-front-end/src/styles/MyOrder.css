@@ -83,6 +83,26 @@
   font-size: 1.2em;
 }
 
+.back-to-shop-button,
+.view-order-button {
+  background-color: black; /* Black button */
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s, transform 0.3s; /* Added transform transition */
+  margin-top: 10px;
+  width: 100%;
+}
+
+.back-to-shop-button:hover,
+.view-order-button:hover {
+  background-color: #004d40; /* Darker blue on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {
