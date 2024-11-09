@@ -31,6 +31,9 @@ const LoginPage = () => {
         } else if (response.data.role === 'manager') {
           navigate('/manager');
           window.location.reload();
+        } else if (response.data.role === 'supervisor') {
+          navigate('/admin');
+          window.location.reload();
         } else {
           navigate('/');
           window.location.reload();

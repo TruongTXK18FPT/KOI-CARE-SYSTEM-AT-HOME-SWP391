@@ -33,8 +33,9 @@ const AdminPage = () => {
       }
     })
       .then(response => {
-        setMembers(response.data.data);
-        setFilteredMembers(response.data.data); // Initialize filtered members
+        const filteredData = response.data.data.filter(member => member.role !== 'supervisor');
+        setMembers(filteredData);
+        setFilteredMembers(filteredData); // Initialize filtered members
       })
       .catch(error => console.error('Error fetching members:', error));
   }, []);
@@ -42,18 +43,21 @@ const AdminPage = () => {
   const handleSearch = () => {
     // Implement search functionality here
     const filteredMembers = members.filter(member => 
-      member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.role.toLowerCase().includes(searchTerm.toLowerCase())
+      (member.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.role.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      member.role !== 'supervisor'
     );
     setFilteredMembers(filteredMembers);
   };
 
   const handleRoleSearch = (role) => {
-    // Implement role search functionality here
     if (role === '') {
-      setFilteredMembers(members); // Show all members if no role is selected
+      setFilteredMembers(members); // Show all members except supervisors
     } else {
-      const filteredMembers = members.filter(member => member.role.toLowerCase() === role.toLowerCase());
+      const filteredMembers = members.filter(member => 
+        member.role.toLowerCase() === role.toLowerCase() &&
+        member.role !== 'supervisor'
+      );
       setFilteredMembers(filteredMembers);
     }
   };

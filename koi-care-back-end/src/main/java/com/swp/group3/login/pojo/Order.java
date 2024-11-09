@@ -142,8 +142,24 @@ public class Order {
     public void setOrderDetails(List<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
     }
- @JsonProperty("customerFullName")
+
+    @JsonProperty("customerFullName")
     public String getCustomerFullName() {
         return account != null ? account.getFullName() : null;
+    }
+
+    @JsonProperty("customerEmail")
+    public String getCustomerEmail() {
+        return account != null ? account.getEmail() : null;
+    }
+
+    @JsonProperty("customerPhone")
+    public String getCustomerPhone() {
+        return account != null ? account.getPhone() : null;
+    }
+
+    @JsonProperty("customerAddress")
+    public String getCustomerAddress() {
+        return account != null ? account.getAddress() : null;
     }
 }

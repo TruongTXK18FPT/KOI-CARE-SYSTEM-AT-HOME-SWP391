@@ -65,6 +65,12 @@ public class AccountController {
 
         if (accountOpt.isPresent()) {
             Account account = accountOpt.get();
+            if (!account.getStatus().equals(Account.Status.active)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of(
+                                "message", "Account is inactive. Please contact support to reactivate your account.",
+                                "status", account.getStatus()));
+            }
             String token = jwtService.generateToken(account.getEmail(), account.getRole().toString());
 
             Map<String, Object> response = new HashMap<>();
@@ -73,7 +79,7 @@ public class AccountController {
             response.put("role", account.getRole());
             response.put("fullName", account.getFullName());
             response.put("accountId", account.getAccountId());
-
+            response.put("status", account.getStatus());
             return ResponseEntity.ok().body(response);
         }
 
@@ -118,7 +124,8 @@ public class AccountController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateAccount(@RequestHeader("Authorization") String authHeader, @RequestBody Account updatedAccount) {
+    public ResponseEntity<?> updateAccount(@RequestHeader("Authorization") String authHeader,
+            @RequestBody Account updatedAccount) {
         try {
             String token = authHeader.substring(7);
             String email = jwtService.extractEmail(token);

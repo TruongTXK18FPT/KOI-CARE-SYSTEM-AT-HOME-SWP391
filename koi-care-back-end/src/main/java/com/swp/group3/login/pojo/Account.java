@@ -74,12 +74,9 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Post> posts;
-    // @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    // // @JsonIgnore
-    // // private List<Order> orders;
-    // Enum for Role
+
     public enum Role {
-        admin, member, manager
+        admin, member, manager, supervisor
     }
 
     // Enum for Gender
@@ -135,11 +132,11 @@ public class Account {
     }
 
     public String getAccountImg() {
-    return accountImg;
+        return accountImg;
     }
 
     public void setAccountImg(String accountImg) {
-    this.accountImg = accountImg;
+        this.accountImg = accountImg;
     }
 
     public Role getRole() {
@@ -197,7 +194,7 @@ public class Account {
     public void setStatus(Status status) {
         this.status = status;
     }
-    
+
     public List<Pond> getPonds() {
         return ponds;
     }

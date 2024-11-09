@@ -183,6 +183,9 @@ const OrderManagement = () => {
             <th>Order ID</th>
             <th>Date</th>
             <th>Customer</th>
+            <th>Customer Phone</th>
+            <th>Customer Address</th>
+            <th>Pay method</th>
             <th>Status</th>
             <th>Update Status</th>
           </tr>
@@ -193,6 +196,9 @@ const OrderManagement = () => {
               <td>{order.orderID}</td>
               <td>{new Date(order.orderDate).toLocaleDateString()}</td>
               <td>{order.customerFullName}</td>
+              <td>{order.customerPhone}</td>
+              <td>{order.customerAddress}</td>
+              <td>{order.paymentMethod}</td>
               <td>{getStatusIcon(order.status)} {order.status}</td>
               <td>
                 <select
