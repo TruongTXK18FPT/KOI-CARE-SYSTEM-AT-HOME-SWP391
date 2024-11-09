@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faWater, faRulerVertical, faFish, faTint, faThermometerHalf, faClock, faSkullCrossbones, faCloudSun, faUtensils, faStickyNote, faEye } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/PondDetails.css'; // Import the CSS file for styling
 
 const PondDetails = () => {
@@ -67,10 +69,15 @@ const PondDetails = () => {
                 }
               });
 
-              return { ...pond, totalKoi: totalKoiResponse.data, waterParameters: waterParametersResponse.data };
+              const waterParameters = waterParametersResponse.data;
+              const recentWaterParameter = waterParameters.length > 0
+                ? waterParameters.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))[0]
+                : null;
+
+              return { ...pond, totalKoi: totalKoiResponse.data, recentWaterParameter };
             } catch (error) {
               console.error(`Error fetching details for pond ${pond.id}:`, error.response ? error.response.data : error.message);
-              return { ...pond, totalKoi: 'Error fetching total koi', waterParameters: [] };
+              return { ...pond, totalKoi: 'Error fetching total koi', recentWaterParameter: null };
             }
           })
         );
@@ -99,24 +106,34 @@ const PondDetails = () => {
         }
       });
       setPonds(ponds.filter(pond => pond.id !== pondId));
+      toast.success('Pond deleted successfully!'); // Show success toast notification
     } catch (error) {
       console.error('Error deleting pond:', error);
+      toast.error('Failed to delete pond.'); // Show error toast notification
     }
   };
 
   const handleSavePond = async () => {
+    const { volume, drainCount, depth, skimmerCount } = selectedPond;
+    if (volume < 0 || drainCount < 0 || depth < 0 || skimmerCount < 0) {
+      toast.error('Values cannot be negative.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token'); // Get the token from localStorage
       await axios.put(`http://localhost:8080/api/ponds/update/${selectedPond.id}`, selectedPond, {
- headers: {
+        headers: {
           Authorization: `Bearer ${token}` // Include the token in the headers
         }
       });
       setPonds(ponds.map(pond => (pond.id === selectedPond.id ? selectedPond : pond)));
       setIsEditing(false);
       setSelectedPond(null); // Fixed typo here, was `setSelectedPpond`
+      toast.success('Pond updated successfully!'); // Show success toast notification
     } catch (error) {
       console.error('Error updating pond:', error);
+      toast.error('Failed to update pond.'); // Show error toast notification
     }
   };
 
@@ -146,6 +163,7 @@ const PondDetails = () => {
 
   return (
     <div className="pond-details-container">
+      <ToastContainer />
       <h2>Existing Ponds</h2>
       <button onClick={handleAddNewPond} className="add-pond-btn">Add New Pond</button>
       <div className="pond-list">
@@ -170,33 +188,25 @@ const PondDetails = () => {
             <button onClick={() => handleViewKoiFish(pond.id)} className="view-koi-fish-btn">
               <FontAwesomeIcon icon={faFish} /> View Koi Fish
             </button>
-            {showWaterParameters[pond.id] && (
+            {showWaterParameters[pond.id] && pond.recentWaterParameter && (
               <div className="water-parameters">
-                <h4>Water Parameters</h4>
-                {pond.waterParameters.length > 0 ? (
-                  pond.waterParameters.map((param, index) => (
-                    <div key={index} className="water-parameter">
-                      <p><FontAwesomeIcon icon={faClock} /> Date and Time: {param.dateTime}</p>
-                      <p><FontAwesomeIcon icon={faSkullCrossbones} /> Nitrite (NO2): {param.nitrogenDioxide} mg/l</p>
-                      <p><FontAwesomeIcon icon={faTint} /> Oxygen (O2): {param.oxygen} mg/l</p>
-                      <p><FontAwesomeIcon icon={faTint} /> Nitrate (NO3): {param.nitrate} mg/l</p>
-                      <p><FontAwesomeIcon icon={faThermometerHalf} /> Temperature: {param.temperature} °C</p>
-                      <p><FontAwesomeIcon icon={faTint} /> Phosphate (PO4): {param.phosphate} mg/l</p>
-                      <p><FontAwesomeIcon icon={faTint} /> pH-Value: {param.pHValue}</p>
-                      <p><FontAwesomeIcon icon={faTint} /> Ammonium (NH4): {param.ammonium} mg/l</p>
-                      <p><FontAwesomeIcon icon={faTint} /> KH: {param.potassiumHydride} °dH</p>
-                      <p><FontAwesomeIcon icon={faTint} /> GH: {param.generalHardness} °dH</p>
-                      <p><FontAwesomeIcon icon={faTint} /> CO2: {param.carbonDioxide} mg/l</p>
-                      <p><FontAwesomeIcon icon={faTint} /> Salt: {param.salt} %</p>
-                      <p><FontAwesomeIcon icon={faTint} /> Total Chlorines: {param.totalChlorines} mg/l</p>
-                      <p><FontAwesomeIcon icon={faCloudSun} /> Outdoor Temperature: {param.outdoorTemp} °C</p>
-                      <p><FontAwesomeIcon icon={faUtensils} /> Amount Fed: {param.amountFed} g</p>
-                      <p><FontAwesomeIcon icon={faStickyNote} /> Note: {param.note}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No water parameters found for this pond.</p>
-                )}
+                <h4>Recent Water Parameter</h4>
+                <p><FontAwesomeIcon icon={faClock} /> Date and Time: {pond.recentWaterParameter.dateTime}</p>
+                <p><FontAwesomeIcon icon={faSkullCrossbones} /> Nitrite (NO2): {pond.recentWaterParameter.nitrogenDioxide} mg/l</p>
+                <p><FontAwesomeIcon icon={faTint} /> Oxygen (O2): {pond.recentWaterParameter.oxygen} mg/l</p>
+                <p><FontAwesomeIcon icon={faTint} /> Nitrate (NO3): {pond.recentWaterParameter.nitrate} mg/l</p>
+                <p><FontAwesomeIcon icon={faThermometerHalf} /> Temperature: {pond.recentWaterParameter.temperature} °C</p>
+                <p><FontAwesomeIcon icon={faTint} /> Phosphate (PO4): {pond.recentWaterParameter.phosphate} mg/l</p>
+                <p><FontAwesomeIcon icon={faTint} /> pH-Value: {pond.recentWaterParameter.pHValue}</p>
+                <p><FontAwesomeIcon icon={faTint} /> Ammonium (NH4): {pond.recentWaterParameter.ammonium} mg/l</p>
+                <p><FontAwesomeIcon icon={faTint} /> KH: {pond.recentWaterParameter.potassiumHydride} °dH</p>
+                <p><FontAwesomeIcon icon={faTint} /> GH: {pond.recentWaterParameter.generalHardness} °dH</p>
+                <p><FontAwesomeIcon icon={faTint} /> CO2: {pond.recentWaterParameter.carbonDioxide} mg/l</p>
+                <p><FontAwesomeIcon icon={faTint} /> Salt: {pond.recentWaterParameter.salt} %</p>
+                <p><FontAwesomeIcon icon={faTint} /> Total Chlorines: {pond.recentWaterParameter.totalChlorines} mg/l</p>
+                <p><FontAwesomeIcon icon={faCloudSun} /> Outdoor Temperature: {pond.recentWaterParameter.outdoorTemp} °C</p>
+                <p><FontAwesomeIcon icon={faUtensils} /> Amount Fed: {pond.recentWaterParameter.amountFed} g</p>
+                <p><FontAwesomeIcon icon={faStickyNote} /> Note: {pond.recentWaterParameter.note}</p>
               </div>
             )}
           </div>
@@ -224,19 +234,19 @@ const PondDetails = () => {
           </label>
           <label>
             Volume:
-            <input type="text" name="volume" value={selectedPond.volume} onChange={handleInputChange} />
+            <input type="number" name="volume" value={selectedPond.volume} onChange={handleInputChange} />
           </label>
           <label>
             Drain Count:
-            <input type="text" name="drainCount" value={selectedPond.drainCount} onChange={handleInputChange} />
+            <input type="number" name="drainCount" value={selectedPond.drainCount} onChange={handleInputChange} />
           </label>
           <label>
             Depth:
-            <input type="text" name="depth" value={selectedPond.depth} onChange={handleInputChange} />
+            <input type="number" name="depth" value={selectedPond.depth} onChange={handleInputChange} />
           </label>
           <label>
             Skimmer Count:
-            <input type="text" name="skimmerCount" value={selectedPond.skimmerCount} onChange={handleInputChange} />
+            <input type="number" name="skimmerCount" value={selectedPond.skimmerCount} onChange={handleInputChange} />
           </label>
           <label>
             Image URL:

@@ -2,10 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWater, faClock, faThermometerHalf, faTint, faFlask, faVial, faLeaf, faCloud, faUtensils, faStickyNote, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import { faWater, faClock, faThermometerHalf, faTint, faFlask, faVial, faCloud, faUtensils, faStickyNote, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/WaterParameter.css';
 import Modal from 'react-modal';
+
 Modal.setAppElement('#root');
+
 const WaterParameter = () => {
   const [formData, setFormData] = useState({
     pond_id: '',
@@ -78,8 +82,83 @@ const WaterParameter = () => {
     });
   };
 
+  const validateFormData = () => {
+    const {
+      nitrogenDioxide,
+      oxygen,
+      nitrate,
+      temperature,
+      phosphate,
+      pHValue,
+      ammonium,
+      potassiumHydride,
+      generalHardness,
+      carbonDioxide,
+      salt,
+      totalChlorines,
+      outdoorTemp
+    } = formData;
+
+    if (nitrogenDioxide < 0 || nitrogenDioxide > 0.1) {
+      toast.error('Nitrite (NO2) must be between 0 and 0.1 mg/l');
+      return false;
+    }
+    if (oxygen <= 6.5) {
+      toast.error('Oxygen (O2) must be greater than 6.5 mg/l');
+      return false;
+    }
+    if (nitrate < 0 || nitrate > 20) {
+      toast.error('Nitrate (NO3) must be between 0 and 20 mg/l');
+      return false;
+    }
+    if (temperature < 5 || temperature > 26) {
+      toast.error('Temperature must be between 5 and 26 °C');
+      return false;
+    }
+    if (phosphate < 0 || phosphate > 0.035) {
+      toast.error('Phosphate (PO4) must be between 0 and 0.035 mg/l');
+      return false;
+    }
+    if (pHValue < 6.9 || pHValue > 8) {
+      toast.error('pH-Value must be between 6.9 and 8');
+      return false;
+    }
+    if (ammonium < 0 || ammonium > 0.1) {
+      toast.error('Ammonium (NH4) must be between 0 and 0.1 mg/l');
+      return false;
+    }
+    if (potassiumHydride < 4) {
+      toast.error('Carbonate Hardness (KH) must be greater than or equal to 4 °dH');
+      return false;
+    }
+    if (generalHardness < 0 || generalHardness > 21) {
+      toast.error('General Hardness (GH) must be between 0 and 21 °dH');
+      return false;
+    }
+    if (carbonDioxide < 5 || carbonDioxide > 35) {
+      toast.error('CO2 must be between 5 and 35 mg/l');
+      return false;
+    }
+    if (salt < 0 || salt > 0.1) {
+      toast.error('Salt must be between 0 and 0.1%');
+      return false;
+    }
+    if (totalChlorines < 0 || totalChlorines > 0.001) {
+      toast.error('Total Chlorines must be between 0 and 0.001 mg/l');
+      return false;
+    }
+    if (outdoorTemp < -40 || outdoorTemp > 40) {
+      toast.error('Outdoor Temperature must be between -40 and 40 °C');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateFormData()) {
+      return;
+    }
     if (isEditing) {
       await updateWaterParameter();
     } else {
@@ -105,6 +184,7 @@ const WaterParameter = () => {
       note: ''
     });
     setIsEditing(false);
+    toast.success('Water parameter added successfully!');
   };
 
   const addWaterParameter = async () => {
@@ -138,6 +218,7 @@ const WaterParameter = () => {
       setWaterParameters([...waterParameters, response.data]);
     } catch (error) {
       console.error('Error adding water parameter:', error);
+      toast.error('Failed to add water parameter.');
     }
   };
 
@@ -172,10 +253,13 @@ const WaterParameter = () => {
       setWaterParameters(waterParameters.map(param => 
         param.pond.id === formData.pond_id && param.dateTime === formData.dateTime ? response.data : param
       ));
+      toast.success('Water parameter updated successfully!');
     } catch (error) {
       console.error('Error updating water parameter:', error);
+      toast.error('Failed to update water parameter.');
     }
   };
+
   const openModal = (content) => {
     setModalContent(content);
     setModalIsOpen(true);
@@ -185,7 +269,8 @@ const WaterParameter = () => {
     setModalIsOpen(false);
     setModalContent('');
   };
-    const recommendations = {
+
+  const recommendations = {
     nitrogenDioxide: "Optimal range: 0-0.1 mg/l\nThe nitrite value can only be kept low by a sufficiently large biofilter and a high circulation rate of the pond water volume (0.5-1.0 times per hour) via the filter. If the value is very high in the short term, the pond can be salinated to a salt content of 0.3% to reduce the toxicity.",
     oxygen: "Optimal range: > 6.5 mg/l\nAn increase of the oxygen content is possible by means of aerator pumps.",
     nitrate: "Optimal range: 0-20 mg/l\nThe nitrate value can be positively influenced by large water changes.",
@@ -204,6 +289,7 @@ const WaterParameter = () => {
 
   return (
     <div className="water-parameter-container">
+      <ToastContainer />
       <h2>{isEditing ? 'Update' : 'Add'} Water Parameter</h2>
       <form onSubmit={handleSubmit}>
         <label>
@@ -221,114 +307,91 @@ const WaterParameter = () => {
         </label>
         <label>
           <FontAwesomeIcon icon={faTint} /> Nitrite (NO2) mg/l:
-          <input type="number" step="0.01" name="nitrogenDioxide" value={formData.nitrogenDioxide} onChange={handleChange} />
+          <input type="number" step="0.01" name="nitrogenDioxide" value={formData.nitrogenDioxide} onChange={handleChange} placeholder='0-0,1 mg/l'/>
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.nitrogenDioxide)} />
         </label>
         <label>
           <FontAwesomeIcon icon={faTint} /> Oxygen (O2) mg/l:
-          <input type="number" step="0.01" name="oxygen" value={formData.oxygen} onChange={handleChange} />
+          <input type="number" step="0.01" name="oxygen" value={formData.oxygen} onChange={handleChange} placeholder='>6,5 mg/l'/>
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.oxygen)} />
         </label>
         <label>
           <FontAwesomeIcon icon={faTint} /> Nitrate (NO3) mg/l:
-          <input type="number" step="0.01" name="nitrate" value={formData.nitrate} onChange={handleChange} />
+          <input type="number" step="0.01" name="nitrate" value={formData.nitrate} onChange={handleChange} placeholder='0-20 mg/l'/>
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.nitrate)} />
         </label>
         <label>
           <FontAwesomeIcon icon={faThermometerHalf} /> Temperature (°C):
-          <input type="number" step="0.1" name="temperature" value={formData.temperature} onChange={handleChange} required />
+          <input type="number" step="0.1" name="temperature" value={formData.temperature} onChange={handleChange} placeholder='5-26°C' required />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.temperature)} />
         </label>
         <label>
           <FontAwesomeIcon icon={faFlask} /> Phosphate (PO4) mg/l:
-          <input type="number" step="0.01" name="phosphate" value={formData.phosphate} onChange={handleChange} />
+          <input type="number" step="0.01" name="phosphate" value={formData.phosphate} onChange={handleChange} placeholder='0-0,035 mg/l' />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.phosphate)} />
         </label>
         <label>
           <FontAwesomeIcon icon={faVial} /> pH-Value:
-          <input type="number" step="0.01" name="pHValue" value={formData.pHValue} onChange={handleChange} />
+          <input type="number" step="0.1" name="pHValue" value={formData.pHValue} onChange={handleChange} placeholder='6,9-8' />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.pHValue)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faLeaf} /> Ammonium (NH4) mg/l:
-          <input type="number" step="0.01" name="ammonium" value={formData.ammonium} onChange={handleChange} />
+          <FontAwesomeIcon icon={faTint} /> Ammonium (NH4) mg/l:
+          <input type="number" step="0.01" name="ammonium" value={formData.ammonium} onChange={handleChange} placeholder='0-0,1 mg/l' />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.ammonium)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faFlask} /> KH (°dH):
-          <input type="number" step="0.01" name="potassiumHydride" value={formData.potassiumHydride} onChange={handleChange} />
+          <FontAwesomeIcon icon={faTint} /> Carbonate Hardness (KH) °dH:
+          <input type="number" name="potassiumHydride" value={formData.potassiumHydride} onChange={handleChange} placeholder='>=4°dH'/>
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.potassiumHydride)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faFlask} /> GH (°dH):
-          <input type="number" step="0.01" name="generalHardness" value={formData.generalHardness} onChange={handleChange} />
+          <FontAwesomeIcon icon={faTint} /> General Hardness (GH) °dH:
+          <input type="number" name="generalHardness" value={formData.generalHardness} onChange={handleChange} placeholder='0-21°dH' />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.generalHardness)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faCloud} /> CO2 (mg/l):
-          <input type="number" step="0.01" name="carbonDioxide" value={formData.carbonDioxide} onChange={handleChange} />
+          <FontAwesomeIcon icon={faTint} /> CO2 mg/l:
+          <input type="number" step="0.01" name="carbonDioxide" value={formData.carbonDioxide} onChange={handleChange} placeholder='5-35 mg/l' />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.carbonDioxide)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faTint} /> Salt (%):
-          <input type="number" step="0.01" name="salt" value={formData.salt} onChange={handleChange} required />
+          <FontAwesomeIcon icon={faTint} /> Salt %:
+          <input type="number" step="0.01" name="salt" value={formData.salt} onChange={handleChange} placeholder='0-0,1%'/>
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.salt)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faFlask} /> Total Chlorines (mg/l):
-          <input type="number" step="0.01" name="totalChlorines" value={formData.totalChlorines} onChange={handleChange} required />
+          <FontAwesomeIcon icon={faTint} /> Total Chlorines mg/l:
+          <input type="number" step="0.001" name="totalChlorines" value={formData.totalChlorines} onChange={handleChange} placeholder='0-0,001 mg/l' />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.totalChlorines)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faThermometerHalf} /> Outdoor Temperature (°C):
-          <input type="number" step="0.1" name="outdoorTemp" value={formData.outdoorTemp} onChange={handleChange} required />
+          <FontAwesomeIcon icon={faCloud} /> Outdoor Temperature (°C):
+          <input type="number" step="0.1" name="outdoorTemp" value={formData.outdoorTemp} onChange={handleChange} placeholder='-40 - 40°C'/>
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.outdoorTemp)} />
         </label>
         <label>
-          <FontAwesomeIcon icon={faUtensils} /> Amount Fed (g):
-          <input type="number" step="0.1" name="amountFed" value={formData.amountFed} onChange={handleChange} required />
+          <FontAwesomeIcon icon={faUtensils} /> Amount Fed:
+          <input type="number" step="0.01" name="amountFed" value={formData.amountFed} onChange={handleChange} />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.amountFed)} />
         </label>
         <label>
           <FontAwesomeIcon icon={faStickyNote} /> Note:
-          <textarea name="note" value={formData.note} onChange={handleChange}></textarea>
+          <textarea name="note" value={formData.note} onChange={handleChange} />
         </label>
-        <button type="submit">{isEditing ? 'Update' : 'Submit'}</button>
+        <button type="submit">{isEditing ? 'Update' : 'Add'} Water Parameter</button>
       </form>
-      <h2>Water Parameter Details</h2>
-      {waterParameters.map((param, index) => (
-        <div key={index} className="details">
-          <p>Pond ID: {param.pond.id}</p>
-          <p>Date and Time: {param.dateTime}</p>
-          <p>Nitrite (NO2): {param.nitrogenDioxide} mg/l</p>
-          <p>Oxygen (O2): {param.oxygen} mg/l</p>
-          <p>Nitrate (NO3): {param.nitrate} mg/l</p>
-          <p>Temperature: {param.temperature} °C</p>
-          <p>Phosphate (PO4): {param.phosphate} mg/l</p>
-          <p>pH-Value: {param.pHValue}</p>
-          <p>Ammonium (NH4): {param.ammonium} mg/l</p>
-          <p>KH: {param.potassiumHydride} °dH</p>
-          <p>GH: {param.generalHardness} °dH</p>
-          <p>CO2: {param.carbonDioxide} mg/l</p>
-          <p>Salt: {param.salt} %</p>
-          <p>Total Chlorines: {param.totalChlorines} mg/l</p>
-          <p>Outdoor Temperature: {param.outdoorTemp} °C</p>
-          <p>Amount Fed: {param.amountFed} g</p>
-          <p>Note: {param.note}</p>
-        </div>
-      ))}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Recommendations"
         className="modal"
       >
-        <h2>Recommendations</h2>
+        <h3>Recommendations</h3>
         <p>{modalContent}</p>
         <button onClick={closeModal}>Close</button>
       </Modal>
     </div>
   );
-};
-
+}
 export default WaterParameter;

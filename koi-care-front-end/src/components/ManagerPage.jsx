@@ -1,8 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { FaChartBar, FaChartLine, FaFileAlt, FaNewspaper, FaComments, FaClipboardList, FaBoxOpen } from 'react-icons/fa';
-import Statistics from './Statistics';
-import TrendsAnalysis from './TrendsAnalysis';
 import ReportGeneration from './ReportGeneration';
 import PostManagement from './PostManagement';
 import FeedbackManagement from './FeedbackManagement';
@@ -15,8 +13,6 @@ const ManagerPage = () => {
   return (
     <div className="manager-page">
       <div className="grid-container">
-        <Card icon={FaChartBar} title="View Statistics" link="statistics" />
-        <Card icon={FaChartLine} title="Trends Analysis" link="trends-analysis" />
         <Card icon={FaFileAlt} title="Report Generation" link="report-generation" />
         <Card icon={FaNewspaper} title="Post Management" link="post-management" />
         <Card icon={FaComments} title="Feedback Management" link="feedback-management" />
@@ -25,8 +21,6 @@ const ManagerPage = () => {
       </div>
       <div className="content">
         <Routes>
-          <Route path="statistics" element={<Statistics />} />
-          <Route path="trends-analysis" element={<TrendsAnalysis />} />
           <Route path="report-generation" element={<ReportGeneration />} />
           <Route path="post-management/*" element={<PostManagement />} />
           <Route path="feedback-management/*" element={<FeedbackManagement />} />

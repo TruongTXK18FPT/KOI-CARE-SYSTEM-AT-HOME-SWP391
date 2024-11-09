@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faFish, faImage, faSortNumericUp, faRulerVertical, faCalendarAlt, faWeight, faVenusMars, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { faFish, faImage, faSortNumericUp, faRulerVertical, faCalendarAlt, faWeight, faVenusMars, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/KoiFish.css'; // Import the CSS file for styling
 
 const KoiFish = () => {
@@ -23,7 +25,6 @@ const KoiFish = () => {
   });
   const [ponds, setPonds] = useState([]);
   const [selectedPond, setSelectedPond] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // State for success message
   const navigate = useNavigate();
 
   const fetchAccountPonds = useCallback(async () => {
@@ -69,6 +70,39 @@ const KoiFish = () => {
 
   const handleAddKoi = async (e) => {
     e.preventDefault();
+
+    const { quantity, age, length, weight, physique, variety, breeder } = newKoi;
+
+    // Validation checks
+    if (quantity < 0 || quantity > 1000) {
+      toast.error('Quantity must be between 0 and 1000.');
+      return;
+    }
+    if (age < 0 || age > 200) {
+      toast.error('Age must be between 0 and 200.');
+      return;
+    }
+    if (length < 0 || length > 300) {
+      toast.error('Length must be between 0 and 300 cm.');
+      return;
+    }
+    if (weight < 0 || weight > 50) {
+      toast.error('Weight must be between 0 and 50 kg.');
+      return;
+    }
+    if (!isNaN(physique)) {
+      toast.error('Physique must not be a number.');
+      return;
+    }
+    if (!isNaN(variety)) {
+      toast.error('Variety must not be a number.');
+      return;
+    }
+    if (!isNaN(breeder)) {
+      toast.error('Breeder must not be a number.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token'); // Get the token from localStorage
       if (!token) {
@@ -102,18 +136,17 @@ const KoiFish = () => {
         breeder: '',
         purchasePrice: ''
       });
-      setSuccessMessage('Koi fish added successfully!'); // Set success message
+      toast.success('Koi fish added successfully!'); // Show success toast notification
     } catch (error) {
       console.error('Error adding koi fish:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add koi fish.'); // Show error toast notification
     }
   };
 
-
   return (
     <div className="koifish-container">
+      <ToastContainer />
       <h2>Koi Fish Management</h2>
-      {/* Display success message */}
-      {successMessage && <div className="success-message">{successMessage}</div>}
 
       <div className="add-koi-form">
         <h3>Add New Koi Fish</h3>
@@ -136,7 +169,7 @@ const KoiFish = () => {
         </label>
         <label>
           <FontAwesomeIcon icon={faSortNumericUp} className="icon" /> Quantity:
-          <input type="number" name="quantity" placeholder="Quantity" value={newKoi.quantity} onChange={handleInputChange} />
+          <input type="number" name="quantity" placeholder="Quantity (0-1000)" value={newKoi.quantity} onChange={handleInputChange} />
         </label>
         <label>
           <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Physique:
@@ -144,15 +177,15 @@ const KoiFish = () => {
         </label>
         <label>
           <FontAwesomeIcon icon={faCalendarAlt} className="icon" /> Age:
-          <input type="number" name="age" placeholder="Age" value={newKoi.age} onChange={handleInputChange} />
+          <input type="number" name="age" placeholder="Age (0-200)" value={newKoi.age} onChange={handleInputChange} />
         </label>
         <label>
           <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Length:
-          <input type="number" name="length" placeholder="Length" value={newKoi.length} onChange={handleInputChange} />
+          <input type="number" name="length" placeholder="Length (0-300 cm)" value={newKoi.length} onChange={handleInputChange} />
         </label>
         <label>
           <FontAwesomeIcon icon={faWeight} className="icon" /> Weight:
-          <input type="number" name="weight" placeholder="Weight" value={newKoi.weight} onChange={handleInputChange} />
+          <input type="number" name="weight" placeholder="Weight (0-50 kg)" value={newKoi.weight} onChange={handleInputChange} />
         </label>
         <label>
           <FontAwesomeIcon icon={faVenusMars} className="icon" /> Sex:

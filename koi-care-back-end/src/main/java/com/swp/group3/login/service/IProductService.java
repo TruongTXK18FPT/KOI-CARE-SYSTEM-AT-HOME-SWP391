@@ -16,4 +16,5 @@ public interface IProductService {
     List<Product> getRelatedProducts(Integer id);
     Product addProduct(Product product);
     Product updateProduct(Integer id, Product product); // Add this method
+    void deleteProduct(Integer id); // Add this method
 }

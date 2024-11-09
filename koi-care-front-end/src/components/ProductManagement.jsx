@@ -12,13 +12,25 @@ const ProductManagement = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [filters, setFilters] = useState({
+    searchKeyword: '',
+    sortBy: '',
+    category: ''
+  });
 
   const token = localStorage.getItem('token');
 
   const fetchProducts = async (page = 0) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/product/getAll?page=${page}&size=10`, {
+      let url = `http://localhost:8080/product/getAll?page=${page}&size=10`;
+      if (filters.category) {
+        url = `http://localhost:8080/product/filter?category=${filters.category}&page=${page}&size=10`;
+      } else if (filters.sortBy) {
+        url = `http://localhost:8080/product/sort?sortBy=${filters.sortBy}&page=${page}&size=10`;
+      }
+
+      const response = await axios.get(url, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -35,7 +47,7 @@ const ProductManagement = () => {
 
   useEffect(() => {
     fetchProducts(currentPage);
-  }, [currentPage]);
+  }, [currentPage, filters]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -79,9 +91,55 @@ const ProductManagement = () => {
     setEditProductId(product.productID);
   };
 
+  const handleDelete = async (productId) => {
+    setLoading(true);
+    try {
+      await axios.delete(`http://localhost:8080/product/delete/${productId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setSuccessMessage('Product deleted successfully');
+      setTimeout(() => setSuccessMessage(null), 3000);
+      fetchProducts(currentPage);
+      setError(null);
+    } catch (err) {
+      setError('Failed to delete product. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  const handleFiltersChange = (newFilters) => {
+    setFilters(prev => ({
+      ...prev,
+      ...newFilters
+    }));
+  };
+
+  const handleCategoryClick = (selectedCategory) => {
+    handleFiltersChange({
+      category: selectedCategory === filters.category ? '' : selectedCategory,
+      currentPage: 0
+    });
+  };
+
+  const handleSortChange = (value) => {
+    handleFiltersChange({ sortBy: value, currentPage: 0 });
+  };
+
+  const handleSearchChange = (value) => {
+    handleFiltersChange({ searchKeyword: value, currentPage: 0 });
+  };
+
+  const filteredProducts = products.filter(
+    (product) =>
+      product.productName.toLowerCase().includes(filters.searchKeyword.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -106,6 +164,33 @@ const ProductManagement = () => {
           <p>{successMessage}</p>
         </div>
       )}
+
+      <div className="filters">
+        <input
+          type="text"
+          placeholder="Search by product name..."
+          value={filters.searchKeyword}
+          onChange={(e) => handleSearchChange(e.target.value)}
+        />
+        <select value={filters.sortBy} onChange={(e) => handleSortChange(e.target.value)}>
+          <option value="">Sort By</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="name_asc">Name: A to Z</option>
+          <option value="name_desc">Name: Z to A</option>
+        </select>
+        <div className="category-boxes">
+          {['Aquarium Supplies', 'Aquarium Decor', 'Fish Food', 'Aquarium Equipment', 'Fish Healthcare'].map((cat) => (
+            <div
+              key={cat}
+              className={`category-box ${filters.category === cat ? 'selected' : ''}`}
+              onClick={() => handleCategoryClick(cat)}
+            >
+              {cat}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <form className="product-form" onSubmit={handleSubmit}>
         <input
@@ -174,7 +259,7 @@ const ProductManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map(product => (
+          {filteredProducts.map(product => (
             <tr key={product.productID}>
               <td>{product.productID}</td>
               <td>{product.productName}</td>
@@ -187,6 +272,7 @@ const ProductManagement = () => {
               <td>{product.stockQuantity}</td>
               <td>
                 <button onClick={() => handleEdit(product)} className="edit-button">Edit</button>
+                <button onClick={() => handleDelete(product.productID)} className="delete-button">Delete</button>
               </td>
             </tr>
           ))}

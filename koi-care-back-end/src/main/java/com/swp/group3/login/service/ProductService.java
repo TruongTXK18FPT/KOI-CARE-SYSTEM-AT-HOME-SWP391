@@ -102,4 +102,10 @@ public class ProductService implements IProductService {
             throw new EntityNotFoundException("Product not found");
         }
     }
+    @Override
+    public void deleteProduct(Integer id) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        productRepository.delete(existingProduct);
+    }
 }

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FaEnvelope, FaLock, FaUser, FaPhone, FaAddressCard, FaBirthdayCake, FaVenusMars } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/RegisterPage.css'; // Ensure this path is correct
 
 const RegisterPage = () => {
@@ -22,22 +24,57 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const dataToSubmit = { ...formData };
+
+    // Validation checks
+    const { email, birthday, phone, address, password, confirmPassword } = formData;
+
+    if (!email.endsWith('@gmail.com')) {
+      toast.error('Email must end with @gmail.com');
+      return;
+    }
+
+    const birthYear = new Date(birthday).getFullYear();
+    if (birthYear >= 2024 || new Date().getFullYear() - birthYear < 10) {
+      toast.error('Birthday must be before 2024 and you must be at least 10 years old');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      toast.error('Phone number must have 10 digits');
+      return;
+    }
+
+    if (!address) {
+      toast.error('Address cannot be empty');
+      return;
+    }
+
+    if (password.length < 1 || password.length > 32) {
+      toast.error('Password must be between 1 and 32 characters');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', dataToSubmit);
+      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
       if (response.status === 201) {
-        alert('Registration successful!');
+        toast.success('Registration successful!');
+        // Optionally, redirect to login page or another page
       } else {
-        alert(`Registration failed: ${response.statusText}`);
+        toast.error(`Registration failed: ${response.statusText}`);
       }
     } catch (error) {
-      alert(`An error occurred: ${error.message}`);
+      toast.error(`An error occurred: ${error.message}`);
     }
   };
 
   return (
     <div className="register-page">
+      <ToastContainer />
       <div className="register-welcome-message">
         <h2>Welcome to the Koi Care System!</h2>
         <p>Please fill out the form below to create your account.</p>

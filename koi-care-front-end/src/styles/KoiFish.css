@@ -31,10 +31,11 @@ body {
   gap: 15px;
   width: 100%; /* Ensure forms take full width */
   max-width: 600px; /* Limit max-width for better readability */
-  background-color: #fff8dc; /* Light chocolate tone for form background */
+  background: rgba(255, 255, 255, 0.9);  /* Light chocolate tone for form background */
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s;
 }
   
   .add-koi-form label, .edit-koi-form label {

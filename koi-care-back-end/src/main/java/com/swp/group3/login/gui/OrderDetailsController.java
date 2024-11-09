@@ -25,7 +25,7 @@ public class OrderDetailsController {
         }
     }
 
-    @PutMapping("/{orderDetailsId}")
+    @PutMapping("/update/{orderDetailsId}")
     public ResponseEntity<?> updateOrderDetails(
             @RequestParam int accountId,
             @PathVariable int orderDetailsId,
@@ -41,7 +41,7 @@ public class OrderDetailsController {
         }
     }
 
-    @DeleteMapping("/{orderDetailsId}")
+    @DeleteMapping("/delete/{orderDetailsId}")
     public ResponseEntity<?> deleteOrderDetails(
             @RequestParam int accountId,
             @PathVariable int orderDetailsId) {

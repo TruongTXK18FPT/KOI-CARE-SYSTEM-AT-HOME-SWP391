@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/ForgotPasswordPage.css';
 
 const ForgotPasswordPage = () => {
@@ -9,8 +11,6 @@ const ForgotPasswordPage = () => {
     newPassword: '',
     confirmPassword: ''
   });
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
   const [emailExists, setEmailExists] = useState(false);
   const navigate = useNavigate();
 
@@ -28,44 +28,49 @@ const ForgotPasswordPage = () => {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    toast.dismiss();
 
     try {
       const response = await axios.post('http://localhost:8080/api/auth/check-email', { email });
       if (response.data.exists) {
         setEmailExists(true);
+        toast.success('Email found. Please enter your new password.');
       } else {
-        setError('Email not found.');
+        toast.error('Email not found.');
       }
     } catch (error) {
-      setError(error.response ? error.response.data.message : 'Error checking email.');
+      toast.error(error.response ? error.response.data.message : 'Error checking email.');
     }
   };
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    toast.dismiss();
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setError('Passwords do not match.');
+      toast.error('Passwords do not match.');
+      return;
+    }
+
+    if (formData.newPassword.length < 1 || formData.newPassword.length > 32) {
+      toast.error('Password must be between 1 and 32 characters.');
       return;
     }
 
     try {
       const response = await axios.post('http://localhost:8080/api/auth/reset-password', { email, ...formData });
-      setMessage(response.data.message);
+      toast.success(response.data.message);
       setTimeout(() => {
         navigate('/login'); // Redirect to login page after successful password reset
       }, 3000);
     } catch (error) {
-      setError(error.response ? error.response.data.message : 'Error resetting password.');
+      toast.error(error.response ? error.response.data.message : 'Error resetting password.');
     }
   };
 
   return (
     <div className="forgot-password-container">
+      <ToastContainer />
       <h2>Reset Password</h2>
       {!emailExists ? (
         <form onSubmit={handleEmailSubmit}>
@@ -106,8 +111,6 @@ const ForgotPasswordPage = () => {
           <button type="submit">Reset Password</button>
         </form>
       )}
-      {message && <p className="success-message">{message}</p>}
-      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

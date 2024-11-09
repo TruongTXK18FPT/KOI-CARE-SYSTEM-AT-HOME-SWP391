@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/KoiFishDetails.css'; // Import the CSS file for styling
 
 const KoiFishDetails = () => {
@@ -95,12 +97,46 @@ const KoiFishDetails = () => {
         }
       });
       setKoiFish(koiFish.filter(koi => koi.fish_id !== fishId));
+      toast.success('Koi fish deleted successfully!'); // Show success toast notification
     } catch (error) {
       console.error('Error deleting koi fish:', error);
+      toast.error('Failed to delete koi fish.'); // Show error toast notification
     }
   };
 
   const handleSaveKoi = async () => {
+    const { quantity, age, length, weight, physique, variety, breeder } = selectedKoi;
+
+    // Validation checks
+    if (quantity < 0 || quantity > 1000) {
+      toast.error('Quantity must be between 0 and 1000.');
+      return;
+    }
+    if (age < 0 || age > 200) {
+      toast.error('Age must be between 0 and 200.');
+      return;
+    }
+    if (length < 0 || length > 300) {
+      toast.error('Length must be between 0 and 300 cm.');
+      return;
+    }
+    if (weight < 0 || weight > 50) {
+      toast.error('Weight must be between 0 and 50 kg.');
+      return;
+    }
+    if (!isNaN(physique)) {
+      toast.error('Physique must not be a number.');
+      return;
+    }
+    if (!isNaN(variety)) {
+      toast.error('Variety must not be a number.');
+      return;
+    }
+    if (!isNaN(breeder)) {
+      toast.error('Breeder must not be a number.');
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token'); // Get the token from localStorage
       await axios.put(`http://localhost:8080/api/koifish/update/${selectedKoi.fish_id}`, selectedKoi, {
@@ -111,8 +147,10 @@ const KoiFishDetails = () => {
       setKoiFish(koiFish.map(koi => (koi.fish_id === selectedKoi.fish_id ? selectedKoi : koi)));
       setIsEditing(false);
       setSelectedKoi(null);
+      toast.success('Koi fish updated successfully!'); // Show success toast notification
     } catch (error) {
       console.error('Error updating koi fish:', error);
+      toast.error('Failed to update koi fish.'); // Show error toast notification
     }
   };
 
@@ -129,8 +167,14 @@ const KoiFishDetails = () => {
     setSelectedPondId(e.target.value);
   };
 
+  const handleCloseForm = () => {
+    setIsEditing(false);
+    setSelectedKoi(null);
+  };
+
   return (
     <div className="koifish-details-container">
+      <ToastContainer />
       <h2>Existing Koi Fish</h2>
       <label>
         Select Pond:
@@ -180,35 +224,38 @@ const KoiFishDetails = () => {
       </div>
 
       {isEditing && selectedKoi && (
-        <div className="edit-koi-form">
+        <div className="edit-koi-form centered-form">
+          <button className="close-btn" onClick={handleCloseForm}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
           <h3>Update Koi Fish</h3>
           <label>
             Koi Name:
-            <input type="text" name="nameFish" value={selectedKoi.nameFish} onChange={handleInputChange} />
+            <input type="text" name="nameFish" value={selectedKoi.nameFish} onChange={handleInputChange} placeholder="Koi Name" />
           </label>
           <label>
             Image URL:
-            <input type="text" name="imageFish" value={selectedKoi.imageFish} onChange={handleInputChange} />
+            <input type="text" name="imageFish" value={selectedKoi.imageFish} onChange={handleInputChange} placeholder="Image URL" />
           </label>
           <label>
             Quantity:
-            <input type="number" name="quantity" value={selectedKoi.quantity} onChange={handleInputChange} />
+            <input type="number" name="quantity" value={selectedKoi.quantity} onChange={handleInputChange} placeholder="Quantity (0-1000)" />
           </label>
           <label>
             Physique:
-            <input type="text" name="physique" value={selectedKoi.physique} onChange={handleInputChange} />
+            <input type="text" name="physique" value={selectedKoi.physique} onChange={handleInputChange} placeholder="Physique" />
           </label>
           <label>
             Age:
-            <input type="number" name="age" value={selectedKoi.age} onChange={handleInputChange} />
+            <input type="number" name="age" value={selectedKoi.age} onChange={handleInputChange} placeholder="Age (0-200)" />
           </label>
           <label>
             Length:
-            <input type="number" name="length" value={selectedKoi.length} onChange={handleInputChange} />
+            <input type="number" name="length" value={selectedKoi.length} onChange={handleInputChange} placeholder="Length (0-300 cm)" />
           </label>
           <label>
             Weight:
-            <input type="number" name="weight" value={selectedKoi.weight} onChange={handleInputChange} />
+            <input type="number" name="weight" value={selectedKoi.weight} onChange={handleInputChange} placeholder="Weight (0-50 kg)" />
           </label>
           <label>
             Sex:
@@ -220,7 +267,7 @@ const KoiFishDetails = () => {
           </label>
           <label>
             Variety:
-            <input type="text" name="variety" value={selectedKoi.variety} onChange={handleInputChange} />
+            <input type="text" name="variety" value={selectedKoi.variety} onChange={handleInputChange} placeholder="Variety" />
           </label>
           <label>
             In Pond Since:
@@ -228,13 +275,14 @@ const KoiFishDetails = () => {
           </label>
           <label>
             Breeder:
-            <input type="text" name="breeder" value={selectedKoi.breeder} onChange={handleInputChange} />
+            <input type="text" name="breeder" value={selectedKoi.breeder} onChange={handleInputChange} placeholder="Breeder" />
           </label>
           <label>
             Purchase Price:
-            <input type="number" name="purchasePrice" value={selectedKoi.purchasePrice} onChange={handleInputChange} />
+            <input type="number" name="purchasePrice" value={selectedKoi.purchasePrice} onChange={handleInputChange} placeholder="Purchase Price" />
           </label>
           <button onClick={handleSaveKoi} className="save-btn">Save</button>
+          <button onClick={handleCloseForm} className="cancel-btn">Cancel</button>
         </div>
       )}
     </div>

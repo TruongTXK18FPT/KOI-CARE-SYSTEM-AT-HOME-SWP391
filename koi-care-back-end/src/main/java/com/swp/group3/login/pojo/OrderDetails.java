@@ -26,9 +26,8 @@ public class OrderDetails {
     @JsonIgnore
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "productID", nullable = false)
-    @JsonIgnore
     private Product product;
 
     @Column(name = "quantity", nullable = false)

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faTruck, faCheckCircle, faBan } from '@fortawesome/free-solid-svg-icons';
 import '../styles/OrderManagement.css';
 
 const OrderManagement = () => {
@@ -13,6 +15,8 @@ const OrderManagement = () => {
     sortOrder: 'newest',
     statusFilter: ''
   });
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const token = localStorage.getItem('token');
   const accountId = localStorage.getItem('accountId'); // Retrieve accountId from local storage
@@ -40,11 +44,13 @@ const OrderManagement = () => {
         },
         params: {
           ...params,
+          page,
           size: 10
         }
       });
 
       setOrders(response.data.content || response.data);
+      setTotalPages(response.data.totalPages);
       setError(null);
     } catch (err) {
       setError('Failed to fetch orders. Please try again later.');
@@ -55,7 +61,7 @@ const OrderManagement = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [filters]);
+  }, [filters, page]);
 
   const updateOrderStatus = async (orderId, status) => {
     setUpdateLoading(orderId);
@@ -104,6 +110,25 @@ const OrderManagement = () => {
 
   const handleStatusFilterChange = (e) => {
     handleFiltersChange({ statusFilter: e.target.value });
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'pending':
+        return <FontAwesomeIcon icon={faClock} className="status-icon pending" />;
+      case 'shipped':
+        return <FontAwesomeIcon icon={faTruck} className="status-icon shipped" />;
+      case 'delivered':
+        return <FontAwesomeIcon icon={faCheckCircle} className="status-icon delivered" />;
+      case 'cancel':
+        return <FontAwesomeIcon icon={faBan} className="status-icon cancel" />;
+      default:
+        return null;
+    }
   };
 
   if (loading) {
@@ -168,7 +193,7 @@ const OrderManagement = () => {
               <td>{order.orderID}</td>
               <td>{new Date(order.orderDate).toLocaleDateString()}</td>
               <td>{order.customerFullName}</td>
-              <td>{order.status}</td>
+              <td>{getStatusIcon(order.status)} {order.status}</td>
               <td>
                 <select
                   value={order.status}
@@ -185,6 +210,18 @@ const OrderManagement = () => {
           ))}
         </tbody>
       </table>
+
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index)}
+            className={index === page ? 'active' : ''}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

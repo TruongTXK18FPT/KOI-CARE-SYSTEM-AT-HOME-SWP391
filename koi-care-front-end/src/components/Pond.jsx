@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWater, faRulerVertical, faTint, faSkull, faImage, faEye } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/Pond.css'; // Import the CSS file for styling
 
 const Pond = () => {
@@ -47,34 +49,44 @@ const Pond = () => {
 
   const handleAddPond = async (e) => {
     e.preventDefault();
-    try {
-        const token = localStorage.getItem('token');
-        const { id, accountId, ...pondData } = newPond; // Exclude id but include accountId
 
-        const response = await axios.post(`http://localhost:8080/api/ponds/add`, {
-            ...pondData,
-            account: { accountId: newPond.accountId }, // Send accountId as part of account object
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        console.log('Pond added:', response.data);
-        setNewPond({
-            id: '',
-            name: '',
-            volume: '',
-            drainCount: '',
-            depth: '',
-            skimmerCount: '',
-            image: '',
-            totalKoi: 0,
-            accountId: newPond.accountId,
-        });
-    } catch (error) {
-        console.error('Error adding pond:', error);
+    // Validation checks for negative numbers
+    const { volume, drainCount, depth, skimmerCount } = newPond;
+    if (volume < 0 || drainCount < 0 || depth < 0 || skimmerCount < 0) {
+      toast.error('Values cannot be negative.');
+      return;
     }
-};
+
+    try {
+      const token = localStorage.getItem('token');
+      const { id, accountId, ...pondData } = newPond; // Exclude id but include accountId
+
+      const response = await axios.post(`http://localhost:8080/api/ponds/add`, {
+        ...pondData,
+        account: { accountId: newPond.accountId }, // Send accountId as part of account object
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Pond added:', response.data);
+      setNewPond({
+        id: '',
+        name: '',
+        volume: '',
+        drainCount: '',
+        depth: '',
+        skimmerCount: '',
+        image: '',
+        totalKoi: 0,
+        accountId: newPond.accountId,
+      });
+      toast.success('Pond added successfully!'); // Show success toast notification
+    } catch (error) {
+      console.error('Error adding pond:', error);
+      toast.error('Failed to add pond.'); // Show error toast notification
+    }
+  };
 
   const handleViewPonds = () => {
     navigate('/pond-details');
@@ -82,6 +94,7 @@ const Pond = () => {
 
   return (
     <div className="pond-container">
+      <ToastContainer />
       <button onClick={handleViewPonds} className="view-ponds-btn">
         <FontAwesomeIcon icon={faEye} /> View Existing Ponds
       </button>

@@ -1,3 +1,5 @@
+/* OrderManagement.css */
+
 .order-management-container {
   padding: 2rem;
   max-width: 1200px;
@@ -103,4 +105,50 @@
 .order-table td select:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.status-icon {
+  margin-right: 5px;
+}
+
+.status-icon.pending {
+  color: #ff9800;
+}
+
+.status-icon.shipped {
+  color: #2196f3;
+}
+
+.status-icon.delivered {
+  color: #4caf50;
+}
+
+.status-icon.cancel {
+  color: #f44336;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #444;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button.active {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+.pagination button:hover {
+  background-color: #555;
 }

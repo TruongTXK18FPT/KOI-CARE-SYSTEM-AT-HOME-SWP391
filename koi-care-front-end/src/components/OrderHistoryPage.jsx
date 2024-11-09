@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTruck, faBox, faTimes, faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTruck, faBox, faTimes, faSpinner, faArrowLeft, faFileInvoice } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/OrderHistoryPage.css';
@@ -164,7 +164,7 @@ const OrderHistoryPage = () => {
                 <div className="order-footer">
                   <div className="total-amount">
                     <label>Total Amount</label>
-                    <p className="amount">${order.totalAmount.toFixed(2)}</p>
+                    <p className="amount">{order.totalAmount.toFixed(2)} VND</p>
                   </div>
                   
                   {order.status.toLowerCase() === 'pending' && (
@@ -187,6 +187,14 @@ const OrderHistoryPage = () => {
                       )}
                     </button>
                   )}
+                  <button
+                    onClick={() => navigate(`/invoice/${order.orderID}`)}
+                    className="invoice-button"
+                    aria-label="View Invoice"
+                  >
+                    <FontAwesomeIcon icon={faFileInvoice} />
+                    <span>View Invoice</span>
+                  </button>
                 </div>
               </div>
             ))}

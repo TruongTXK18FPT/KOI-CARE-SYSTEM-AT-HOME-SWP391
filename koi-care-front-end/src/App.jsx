@@ -82,6 +82,8 @@ import BlogContent from './components/BlogContent';
 import BlogPage from './components/BlogPage'; // Import the BlogPage component
 import BlogDetails from './components/BlogDetails';
 import OrderHistoryPage from './components/OrderHistoryPage';
+import Invoice from './components/Invoice';
+
 //import PrivateRoute from './context/PrivateRoute'; // Import the PrivateRoute component
 
 const App = () => {
@@ -139,6 +141,8 @@ const App = () => {
           <Route path="/blog/:id" element={<BlogDetails />} />
           <Route path="/blog-content" element={<BlogContent />} />
           <Route path="/order-history" element={<OrderHistoryPage />} />
+          <Route path="/invoice/:orderId" element={<Invoice />} />
+
         </Routes>
       </Router>
     </AuthProvider>

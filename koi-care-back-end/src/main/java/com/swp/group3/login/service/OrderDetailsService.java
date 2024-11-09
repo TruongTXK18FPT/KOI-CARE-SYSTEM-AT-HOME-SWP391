@@ -40,9 +40,9 @@ public class OrderDetailsService implements IOrderDetailsService {
         if (orderId <= 0) {
             throw new IllegalArgumentException("Invalid order ID");
         }
-        Optional<OrderDetails> orderDetailsOpt = orderDetailsRepository.findByOrderOrderID(orderId);
-        return orderDetailsOpt.map(List::of).orElse(List.of());
+        return orderDetailsRepository.findByOrderOrderID(orderId);
     }
+
 
     @Override
     @Transactional
