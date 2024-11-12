@@ -55,11 +55,15 @@ public class KoiFish {
     @Column(name = "purchasePrice", precision = 10, scale = 2)
     private BigDecimal purchasePrice;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('deceased','sick','live') DEFAULT 'live'")
+    private Status status;
+
     public KoiFish() {
     }
 
     public KoiFish(Pond pond, String nameFish, String imageFish, int quantity, String physique, int age, float length,
-            float weight, Sex sex, String variety, Date inPondSince, String breeder, BigDecimal purchasePrice) {
+            float weight, Sex sex, String variety, Date inPondSince, String breeder, BigDecimal purchasePrice,Status status) {
         this.pond = pond;
         this.nameFish = nameFish;
         this.imageFish = imageFish;
@@ -73,6 +77,7 @@ public class KoiFish {
         this.inPondSince = inPondSince;
         this.breeder = breeder;
         this.purchasePrice = purchasePrice;
+        this.status = status;
     }
 
     public Integer getFish_id() {
@@ -187,10 +192,20 @@ public class KoiFish {
         this.purchasePrice = purchasePrice;
     }
 
-    // Getters and Setters
-    public enum Sex{
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public enum Sex {
         male, female
     }
 
+    public enum Status {
+        deceased, live, sick
+    }
 }
 

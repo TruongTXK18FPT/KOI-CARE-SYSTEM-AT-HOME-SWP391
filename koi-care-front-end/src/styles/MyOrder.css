@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 500px; /* Increased max-width for better balance */
   background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
-  padding: 40px; /* Increased padding for the form */
+  padding: 80px; /* Increased padding for the form */
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Increased box-shadow for the form */
   animation: fadeIn 1s;

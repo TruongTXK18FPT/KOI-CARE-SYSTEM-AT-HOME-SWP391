@@ -28,7 +28,10 @@ public class CalculateController {
         double foodRate;
 
         // Xác định tỷ lệ thức ăn theo nhiệt độ
-        if (temperature > 20) {
+        if (temperature > 28) {
+             return ResponseEntity.ok("If tempurature > 28°C. Temperature is not possible"); // Không cho ăn nếu nhiệt độ quá cao
+        } else
+        if (temperature > 20 && temperature <= 28) {
             foodRate = 0.02; // 2-3%
         } else if (temperature >= 15 && temperature <= 20) {
             foodRate = 0.01; // 1-2%

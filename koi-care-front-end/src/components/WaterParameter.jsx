@@ -111,8 +111,8 @@ const WaterParameter = () => {
       toast.error('Nitrate (NO3) must be between 0 and 20 mg/l');
       return false;
     }
-    if (temperature < 5 || temperature > 26) {
-      toast.error('Temperature must be between 5 and 26 °C');
+    if (temperature < 15 || temperature > 40) {
+      toast.error('Temperature must be between 15 and 40 °C');
       return false;
     }
     if (phosphate < 0 || phosphate > 0.035) {
@@ -149,6 +149,14 @@ const WaterParameter = () => {
     }
     if (outdoorTemp < -40 || outdoorTemp > 40) {
       toast.error('Outdoor Temperature must be between -40 and 40 °C');
+      return false;
+    }
+    if (formData.amountFed < 0) {
+      toast.error('Amount Fed must be greater than or equal to 0');
+      return false;
+    }
+    if(formData.pond_id === '') {
+      toast.error('Please select a pond');
       return false;
     }
     return true;
@@ -322,7 +330,7 @@ const WaterParameter = () => {
         </label>
         <label>
           <FontAwesomeIcon icon={faThermometerHalf} /> Temperature (°C):
-          <input type="number" step="0.1" name="temperature" value={formData.temperature} onChange={handleChange} placeholder='5-26°C' required />
+          <input type="number" step="0.1" name="temperature" value={formData.temperature} onChange={handleChange} placeholder='15°C-30°C' required />
           <FontAwesomeIcon icon={faInfoCircle} onClick={() => openModal(recommendations.temperature)} />
         </label>
         <label>

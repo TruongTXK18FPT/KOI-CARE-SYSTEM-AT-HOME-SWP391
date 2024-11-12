@@ -24,6 +24,10 @@ const AdminPage = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [error, setError] = useState('');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const membersPerPage = 10;
+
   useEffect(() => {
     // Fetch the list of members from the server
     const token = localStorage.getItem('token'); // Get the token from localStorage
@@ -48,6 +52,7 @@ const AdminPage = () => {
       member.role !== 'supervisor'
     );
     setFilteredMembers(filteredMembers);
+    setCurrentPage(1); // Reset to first page after search
   };
 
   const handleRoleSearch = (role) => {
@@ -60,6 +65,7 @@ const AdminPage = () => {
       );
       setFilteredMembers(filteredMembers);
     }
+    setCurrentPage(1); // Reset to first page after role search
   };
 
   const handleAddMember = () => {
@@ -120,6 +126,13 @@ const AdminPage = () => {
       });
   };
 
+  // Pagination logic
+  const indexOfLastMember = currentPage * membersPerPage;
+  const indexOfFirstMember = indexOfLastMember - membersPerPage;
+  const currentMembers = filteredMembers.slice(indexOfFirstMember, indexOfLastMember);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="admin-page-container">
       <h2>Admin Page</h2>
@@ -164,7 +177,7 @@ const AdminPage = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredMembers.map(member => (
+            {currentMembers.map(member => (
               <tr key={member.accountId}>
                 <td>{member.email}</td>
                 <td>{member.fullName}</td>
@@ -182,6 +195,13 @@ const AdminPage = () => {
             ))}
           </tbody>
         </table>
+        <div className="pagination">
+          {Array.from({ length: Math.ceil(filteredMembers.length / membersPerPage) }, (_, index) => (
+            <button key={index + 1} onClick={() => paginate(index + 1)} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
       {showAddMemberForm && (
         <div className="add-member-form">

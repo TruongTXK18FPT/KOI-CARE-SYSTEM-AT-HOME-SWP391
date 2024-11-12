@@ -1,0 +1,73 @@
+.water-parameter-history-container {
+    padding: 20px;
+    background: linear-gradient(to left, salmon, #2193b0);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .water-parameter-history-container h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .water-parameter-history-container label {
+    display: block;
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .water-parameter-history-container select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #fff;
+    transition: border-color 0.2s;
+  }
+  
+  .water-parameter-history-container select:focus {
+    border-color: #2193b0;
+    outline: none;
+  }
+  
+  .water-parameter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .water-parameter {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .water-parameter:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .water-parameter h4 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .water-parameter p {
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  .water-parameter p svg {
+    margin-right: 5px;
+    color: #2193b0;
+  }

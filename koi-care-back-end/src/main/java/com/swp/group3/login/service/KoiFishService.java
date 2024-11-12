@@ -53,6 +53,7 @@ public class KoiFishService implements IKoiFishService {
                     koiFish.setBreeder(updatedKoiFish.getBreeder());
                     koiFish.setPurchasePrice(updatedKoiFish.getPurchasePrice());
                     koiFish.setPond(updatedKoiFish.getPond());
+                    koiFish.setStatus(updatedKoiFish.getStatus());
                     return koiFishRepository.save(koiFish);
                 });
     }

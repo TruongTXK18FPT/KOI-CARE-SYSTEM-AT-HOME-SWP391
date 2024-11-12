@@ -52,6 +52,7 @@ public class Pond {
 
      @OneToMany(mappedBy = "pond", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WaterParameter> waterParameters;
+    
     public Pond() {
     }
     public Pond(Account account, String name, String image, int numberOfFish, float size, float volume, int drainCount, float depth, int skimmerCount) {

@@ -161,6 +161,10 @@ const PondDetails = () => {
     navigate('/koi-fish-details');
   };
 
+  const handleViewWaterParameterHistory = (pondId) => {
+    navigate(`/water-parameter-history`);
+  };
+
   return (
     <div className="pond-details-container">
       <ToastContainer />
@@ -187,6 +191,9 @@ const PondDetails = () => {
             </button>
             <button onClick={() => handleViewKoiFish(pond.id)} className="view-koi-fish-btn">
               <FontAwesomeIcon icon={faFish} /> View Koi Fish
+            </button>
+            <button onClick={() => handleViewWaterParameterHistory(pond.id)} className="view-water-parameter-history-btn">
+              <FontAwesomeIcon icon={faClock} /> View Water Parameter History
             </button>
             {showWaterParameters[pond.id] && pond.recentWaterParameter && (
               <div className="water-parameters">

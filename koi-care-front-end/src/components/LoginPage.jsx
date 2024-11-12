@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/LoginPage.css';
 
 const LoginPage = () => {
@@ -44,14 +46,20 @@ const LoginPage = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError('Invalid email or password');
+        toast.error('Invalid email or password');
+      } else if (error.response && error.response.status === 403) {
+        setError('Account is inactive');
+        toast.error('Account is inactive');
       } else {
         setError('An error occurred. Please try again.');
+        toast.error('An error occurred. Please try again.');
       }
     }
   };
 
   return (
     <div className="login-page">
+      <ToastContainer />
       <div className="login-welcome-message">
         <h2>Welcome to Our Koi Care System</h2>
         <p>You can experience it best by logging in!</p>

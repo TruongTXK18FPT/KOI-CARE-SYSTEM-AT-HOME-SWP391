@@ -4,15 +4,39 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFish, faImage, faSortNumericUp, faRulerVertical, faCalendarAlt, faWeight, faVenusMars, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
+import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/KoiFish.css'; // Import the CSS file for styling
+
+const koiVarieties = [
+  { name: 'Ki Utsuri', description: 'Black koi with yellow patterns.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Ki-Utsuri-696x464.jpg' },
+  { name: 'Shiro Utsuri', description: 'Black koi with white patterns.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Shiro-Utsuri-696x464.jpg' },
+  { name: 'Hi Utsuri', description: 'Black koi with red patterns.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/hi-utsuri-696x464.jpg' },
+  { name: 'Ginrin Ki Utsuri', description: 'Black koi with yellow patterns and metallic scales.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Ginrin-Ki-Utsuri-696x464.jpg' },
+  { name: 'Ginrin Hi Utsuri', description: 'Black koi with red patterns and metallic scales.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Ginrin-Hi-Utsuri-696x464.jpg' },
+  { name: 'Ginrin Tancho Kohaku', description: 'White koi with a single red spot on the head, with metallic scales.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Ginrin-Tancho-Kohaku-696x464.jpg' },
+  { name: 'Old Style Goshiki', description: 'Koi with a mix of five colors, including red, black, and blue.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Old-Style-Goshiki-696x464.jpg' },
+  { name: 'Tancho Goshiki', description: 'Goshiki with a single red spot on the head.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Tancho-Goshiki-696x464.jpg' },
+  { name: 'Tancho Showa', description: 'Showa with a red spot on the head.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Tancho-Showa-696x464.jpg' },
+  { name: 'Ginrin Goshiki', description: 'Goshiki with metallic scales.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Ginrin-Goshiki-696x464.jpg' },
+  { name: 'Doitsu Goshiki', description: 'Scaleless Goshiki.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Doitsu-Goshiki-696x464.jpg' },
+  { name: 'New Style Goshiki', description: 'Modern Goshiki with brighter colors.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/New-Style-Goshiki-696x464.jpg' },
+  { name: 'Budo Goromo', description: 'Koi with a purple net-like overlay on red markings.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Budo-Goromo-696x464.jpg' },
+  { name: 'Shusui', description: 'Scaleless blue koi with red sides.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Shusui-696x464.jpg' },
+  { name: 'Asagi', description: 'Blue-gray koi with red belly and fins.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Asagi-696x464.jpg' },
+  { name: 'Ai Goromo', description: 'White koi with red markings overlaid with a blue net pattern.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Ai-Goromo-696x464.jpg' },
+  { name: 'Kujaku', description: 'Platinum koi with red and black net pattern.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Kujaku-696x464.jpg' },
+  { name: 'Doitsu Kujaku', description: 'Scaleless Kujaku with a similar net pattern.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Doitsu-Kujaku-696x464.jpg' },
+  { name: 'Heisei Nishikigoi', description: 'Known for diverse patterns, often used for many modern varieties.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Heisei-Nishikigoi-696x464.jpg' },
+  { name: 'Kikusui', description: 'Scaleless koi with red and white metallic colors.', image: 'https://cachepkoi.com.vn/wp-content/uploads/2016/05/Kikusui-696x464.png' }
+];
 
 const KoiFish = () => {
   const [newKoi, setNewKoi] = useState({
     fish_id: '',
     nameFish: '',
     imageFish: '',
-    quantity: '',
+    quantity: 1, // Set default quantity to 1
     physique: '',
     age: '',
     length: '',
@@ -21,10 +45,14 @@ const KoiFish = () => {
     variety: '',
     inPondSince: '',
     breeder: '',
-    purchasePrice: ''
+    purchasePrice: '',
+    status: 'live' // Set default status to live
   });
   const [ponds, setPonds] = useState([]);
   const [selectedPond, setSelectedPond] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+  const [currentPage, setCurrentPage] = useState(1); // State to manage current page
+  const itemsPerPage = 5; // Number of items per page
   const navigate = useNavigate();
 
   const fetchAccountPonds = useCallback(async () => {
@@ -71,22 +99,18 @@ const KoiFish = () => {
   const handleAddKoi = async (e) => {
     e.preventDefault();
 
-    const { quantity, age, length, weight, physique, variety, breeder } = newKoi;
+    const { age, length, weight, physique, variety, breeder, purchasePrice } = newKoi;
 
     // Validation checks
-    if (quantity < 0 || quantity > 1000) {
-      toast.error('Quantity must be between 0 and 1000.');
-      return;
-    }
-    if (age < 0 || age > 200) {
+    if (age <= 0 || age > 200) {
       toast.error('Age must be between 0 and 200.');
       return;
     }
-    if (length < 0 || length > 300) {
+    if (length <= 0 || length > 300) {
       toast.error('Length must be between 0 and 300 cm.');
       return;
     }
-    if (weight < 0 || weight > 50) {
+    if (weight <= 0 || weight > 50) {
       toast.error('Weight must be between 0 and 50 kg.');
       return;
     }
@@ -100,6 +124,14 @@ const KoiFish = () => {
     }
     if (!isNaN(breeder)) {
       toast.error('Breeder must not be a number.');
+      return;
+    }
+    if (!selectedPond) {
+      toast.error('Please select a pond.');
+      return;
+    }
+    if (purchasePrice <= 0) {
+      toast.error('Purchase price must be greater than 0.');
       return;
     }
 
@@ -119,13 +151,13 @@ const KoiFish = () => {
           Authorization: `Bearer ${token}` // Include the token in the headers
         }
       });
-        
+
       console.log('Koi fish added successfully:', response.data);
       setNewKoi({
         fish_id: '',
         nameFish: '',
         imageFish: '',
-        quantity: '',
+        quantity: 1, // Reset quantity to 1
         physique: '',
         age: '',
         length: '',
@@ -134,7 +166,8 @@ const KoiFish = () => {
         variety: '',
         inPondSince: '',
         breeder: '',
-        purchasePrice: ''
+        purchasePrice: '',
+        status: 'live' // Reset status to live
       });
       toast.success('Koi fish added successfully!'); // Show success toast notification
     } catch (error) {
@@ -142,6 +175,13 @@ const KoiFish = () => {
       toast.error('Failed to add koi fish.'); // Show error toast notification
     }
   };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = koiVarieties.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="koifish-container">
@@ -169,7 +209,7 @@ const KoiFish = () => {
         </label>
         <label>
           <FontAwesomeIcon icon={faSortNumericUp} className="icon" /> Quantity:
-          <input type="number" name="quantity" placeholder="Quantity (0-1000)" value={newKoi.quantity} onChange={handleInputChange} />
+          <input type="number" name="quantity" placeholder="Quantity (0-1000)" value={newKoi.quantity} onChange={handleInputChange} disabled />
         </label>
         <label>
           <FontAwesomeIcon icon={faRulerVertical} className="icon" /> Physique:
@@ -212,7 +252,39 @@ const KoiFish = () => {
           <input type="number" name="purchasePrice" placeholder="Purchase Price" value={newKoi.purchasePrice} onChange={handleInputChange} />
         </label>
         <button onClick={handleAddKoi}>Add Koi</button>
+        <button onClick={() => setIsModalOpen(true)}>Show Koi Varieties</button>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Koi Varieties"
+        className="variety-modal"
+        overlayClassName="variety-modal-overlay"
+      >
+        <h2>Koi Fish Varieties</h2>
+        <div className="variety-koi-list">
+          {currentItems.map((variety, index) => (
+            <div key={index} className="variety-koi-item">
+              <img src={variety.image} alt={variety.name} className="variety-koi-image" />
+              <h3>{variety.name}</h3>
+              <p>{variety.description}</p>
+            </div>
+          ))}
+        </div>
+        <div className="pagination">
+          {Array.from({ length: Math.ceil(koiVarieties.length / itemsPerPage) }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={index + 1 === currentPage ? 'active' : ''}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <button onClick={() => setIsModalOpen(false)}>Close</button>
+      </Modal>
     </div>
   );
 };

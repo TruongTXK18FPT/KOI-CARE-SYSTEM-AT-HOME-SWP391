@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faTimes, faMars, faVenus, faHeart, faSkull, faThermometerHalf } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/KoiFishDetails.css'; // Import the CSS file for styling
@@ -105,7 +105,7 @@ const KoiFishDetails = () => {
   };
 
   const handleSaveKoi = async () => {
-    const { quantity, age, length, weight, physique, variety, breeder } = selectedKoi;
+    const { quantity, age, length, weight, physique, variety, breeder, purchasePrice } = selectedKoi;
 
     // Validation checks
     if (quantity < 0 || quantity > 1000) {
@@ -134,6 +134,10 @@ const KoiFishDetails = () => {
     }
     if (!isNaN(breeder)) {
       toast.error('Breeder must not be a number.');
+      return;
+    }
+    if (purchasePrice <= 0) {
+      toast.error('Purchase Price must be greater than 0.');
       return;
     }
 
@@ -188,6 +192,9 @@ const KoiFishDetails = () => {
       <div className="koi-list">
         {koiFish.map(koi => (
           <div key={koi.fish_id} className="koi">
+            <div className={`status-icon ${koi.status}`}>
+              <FontAwesomeIcon icon={koi.status === 'live' ? faHeart : koi.status === 'deceased' ? faSkull : faThermometerHalf} />
+            </div>
             <h3>{koi.nameFish}</h3>
             <p>Pond: {koi.pond ? koi.pond.name : 'N/A'}</p>
             <p>Quantity: {koi.quantity}</p>
@@ -195,7 +202,7 @@ const KoiFishDetails = () => {
             <p>Age: {koi.age}</p>
             <p>Length: {koi.length} cm</p>
             <p>Weight: {koi.weight} kg</p>
-            <p>Sex: {koi.sex}</p>
+            <p>Sex: {koi.sex === 'MALE' ? <FontAwesomeIcon icon={faMars} /> : <FontAwesomeIcon icon={faVenus} />}</p>
             <p>Variety: {koi.variety}</p>
             <p>In Pond Since: {koi.inPondSince}</p>
             <p>Breeder: {koi.breeder}</p>
@@ -280,6 +287,14 @@ const KoiFishDetails = () => {
           <label>
             Purchase Price:
             <input type="number" name="purchasePrice" value={selectedKoi.purchasePrice} onChange={handleInputChange} placeholder="Purchase Price" />
+          </label>
+          <label>
+            Status:
+            <select name="status" value={selectedKoi.status} onChange={handleInputChange}>
+              <option value="live">Live</option>
+              <option value="deceased">Deceased</option>
+              <option value="sick">Sick</option>
+            </select>
           </label>
           <button onClick={handleSaveKoi} className="save-btn">Save</button>
           <button onClick={handleCloseForm} className="cancel-btn">Cancel</button>
