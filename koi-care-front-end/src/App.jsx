@@ -84,8 +84,8 @@ import BlogDetails from './components/BlogDetails';
 import OrderHistoryPage from './components/OrderHistoryPage';
 import Invoice from './components/Invoice';
 import WaterParameterHistory from './components/WaterParameterHistory';
-//import PrivateRoute from './context/PrivateRoute'; // Import the PrivateRoute component
-
+import PrivateRoute from './context/PrivateRoute';
+import ForbiddenPage from './components/ForbiddenPage';
 const App = () => {
   useEffect(() => {
     // Initialize authentication service if needed
@@ -111,14 +111,14 @@ const App = () => {
           <Route path="/pond" element={<Pond />} />
           <Route path="/contact" element={<Contact />} /> {/* Add the Contact route */}
           <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/manager/*" element={<ManagerPage />} />
+          {/* <Route path="/admin" element={<AdminPage />} />
+          <Route path="/manager/*" element={<ManagerPage />} /> */}
 
 
-            {/* <Route
+          <Route
             path="/admin"
             element={
-              <PrivateRoute allowedRoles={['admin']}>
+              <PrivateRoute allowedRoles={['admin', 'supervisor']}>
                 <AdminPage />
               </PrivateRoute>
             }
@@ -129,8 +129,11 @@ const App = () => {
               <PrivateRoute allowedRoles={['manager']}>
                 <ManagerPage />
               </PrivateRoute>
-            } 
-          />  */}
+            }
+          />
+
+          {/* Error pages */}
+          <Route path="/forbidden" element={<ForbiddenPage />} />
           <Route path="/water-parameter" element={<WaterParameter />} />
           <Route path="/koi-fish" element={<KoiFish />} />
           <Route path="/pond-details" element={<PondDetails />} />

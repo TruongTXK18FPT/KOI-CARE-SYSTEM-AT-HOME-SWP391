@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { FaChartBar, FaChartLine, FaFileAlt, FaNewspaper, FaComments, FaClipboardList, FaBoxOpen } from 'react-icons/fa';
-import OrderDashboard from './OrderDashBoard';
+import OrderDashboard from './OrderDashboard';
 import OrderManagement from './OrderManagement';
 import ProductManagement from './ProductManagement';
 import Card from './Card';
